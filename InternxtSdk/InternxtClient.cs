@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using System.Text;
+using Microsoft.VisualBasic.FileIO;
 
 namespace InternxtSdk;
 
@@ -17,6 +19,46 @@ public class InternxtClient : IInternxtClient
     {
         var (normalOutput, errorOutput) = await ExecuteAsync($"login -n -e {username} -p {password}");
         return normalOutput.Contains($"Succesfully logged in to: {username}");
+    }
+
+    public async Task<List<InternxtItem>> ListAsync()
+    {
+        var (normalOutput, errorOutput) = await ExecuteAsync($"list -n --csv");
+        return ParseInternxtItems(normalOutput);
+    }
+
+    public async Task<List<InternxtItem>> ListAsync(string id)
+    {
+        var (normalOutput, errorOutput) = await ExecuteAsync($"list -n --csv -f {id}");
+        return ParseInternxtItems(normalOutput);
+    }
+
+    private static List<InternxtItem> ParseInternxtItems(string normalOutput)
+    {
+        var data = new List<InternxtItem>();
+        using var memStream = new MemoryStream(Encoding.UTF8.GetBytes(normalOutput));
+        using var streamReader = new StreamReader(memStream);
+        using var csvReader = new TextFieldParser(streamReader);
+        csvReader.TextFieldType = FieldType.Delimited;
+        csvReader.SetDelimiters(",");
+        csvReader.ReadLine(); // Ignore first row
+        while (!csvReader.EndOfData)
+        {
+            var fields = csvReader.ReadFields();
+            if (fields == null) continue;
+            // check length of fields according to the csv input. Might be more than 3.
+            if(fields.Length >= 3) 
+            {
+                data.Add(new InternxtItem()
+                {
+                    Type = fields[0],
+                    Name = fields[1],
+                    Id = fields[2],
+                });
+            }
+        }
+
+        return data;
     }
 
     private async Task<(string normalOutput, string errorOutput)> ExecuteAsync(string args)
@@ -45,4 +87,6 @@ public interface IInternxtClient
     string InternxtCliPath { get; set; }
     string NodeJsPath { get; set; }
     Task<bool> LoginAsync(string username, string password);
+    Task<List<InternxtItem>> ListAsync();
+    Task<List<InternxtItem>> ListAsync(string id);
 }
