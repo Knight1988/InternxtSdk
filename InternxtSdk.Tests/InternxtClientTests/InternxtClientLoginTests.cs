@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace InternxtSdk.Tests;
+namespace InternxtSdk.Tests.InternxtClientTests;
 
 public class InternxtClientLoginTests
 {

@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace InternxtSdk.Tests;
+﻿namespace InternxtSdk.Tests.InternxtClientTests;
 
 [TestFixture]
 public class InternxtClientListTests : InternxtClientTestBase
