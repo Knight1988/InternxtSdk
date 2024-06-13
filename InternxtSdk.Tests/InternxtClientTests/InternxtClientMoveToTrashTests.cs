@@ -4,7 +4,6 @@
 public class InternxtClientMoveToTrashTests : InternxtClientTestBase
 {
     private string _fileId;
-    private const string UploadFolderId = "996c383b-9507-4d5d-9af5-9d90455fa8f0";
     
     public override async Task Setup()
     {
@@ -12,8 +11,10 @@ public class InternxtClientMoveToTrashTests : InternxtClientTestBase
         var loginData = GetTestLogin();
         var loginResult = await Client.LoginAsync(loginData.Username, loginData.Password);
         Assert.That(loginResult, Is.EqualTo(true));
+        // create test folder
+        var folderId = await Client.CreateFolderAsync("TestFolder");
         // Upload a file
-        var uploadResult = await Client.UploadAsync("sample\\test.txt", UploadFolderId);
+        var uploadResult = await Client.UploadAsync("sample\\test.txt", folderId);
         Assert.Multiple(() =>
         {
             Assert.That(uploadResult.FileId, Is.Not.Null);
