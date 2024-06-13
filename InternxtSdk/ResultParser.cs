@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using Microsoft.VisualBasic.FileIO;
 
 namespace InternxtSdk;
@@ -48,5 +49,14 @@ public class ResultParser
             FileId = fileId,
             Uuid = uuid
         };
+    }
+
+    public static string ParseInternxtCreateFolderResult(string normalOutput)
+    {
+        var regex = new Regex(@"([a-f|\d]{8}-[a-f|\d]{4}-[a-f|\d]{4}-[a-f|\d]{4}-[a-f|\d]{12})");
+        
+        var match = regex.Match(normalOutput);
+
+        return match.Success ? match.Value : string.Empty;
     }
 }

@@ -47,7 +47,22 @@ public class InternxtClient : IInternxtClient
     public async Task MoveToTrashAsync(string id)
     {
         var result = await ExecuteAsync($"trash -n --id {id}");
-        if (!result.NormalOutput.Contains("File trashed successfully"))
+        if (!result.NormalOutput.Contains("File trashed successfully") && !result.NormalOutput.Contains("Folder trashed successfully"))
+        {
+            throw new Exception(result.ErrorOutput);
+        }
+    }
+    
+    public async Task CreateFolderAsync(string folderName, string parentId)
+    {
+        var command = $"create-folder --name \"{folderName}\"";
+        if (!string.IsNullOrEmpty(parentId))
+        {
+            command += $" --id {parentId}";
+        }
+        var result = await ExecuteAsync(command);
+        var uuid = ResultParser.ParseInternxtCreateFolderResult(result.NormalOutput);
+        if (string.IsNullOrEmpty(uuid))
         {
             throw new Exception(result.ErrorOutput);
         }
@@ -88,4 +103,5 @@ public interface IInternxtClient
     Task<List<InternxtItem>> ListAsync(string id);
     Task<InternxtUploadResult> UploadAsync(string filePath, string id);
     Task MoveToTrashAsync(string id);
+    Task CreateFolderAsync(string folderName, string parentId);
 }
