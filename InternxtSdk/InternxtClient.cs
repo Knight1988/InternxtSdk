@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text;
+using InternxtSdk.Exceptions;
 using Microsoft.VisualBasic.FileIO;
 
 namespace InternxtSdk;
@@ -36,6 +37,10 @@ public class InternxtClient : IInternxtClient
     public async Task<InternxtUploadResult> UploadAsync(string filePath, string id)
     {
         var result = await ExecuteAsync($"upload --json --file {filePath} --id {id}");
+        if (result.NormalOutput.Contains("Error: File already exists"))
+        {
+            throw new FileExistException("File already exists");
+        }
         return ResultParser.ParseInternxtUploadResult(result.NormalOutput);
     }
 
