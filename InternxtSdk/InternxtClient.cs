@@ -50,8 +50,13 @@ public class InternxtClient : IInternxtClient
             throw new Exception(result.ErrorOutput);
         }
     }
-    
-    public async Task CreateFolderAsync(string folderName, string parentId)
+
+    public async Task<string> CreateFolderAsync(string folderName)
+    {
+        return await CreateFolderAsync(folderName, string.Empty);
+    }
+
+    public async Task<string> CreateFolderAsync(string folderName, string parentId)
     {
         var command = $"create-folder --name \"{folderName}\"";
         if (!string.IsNullOrEmpty(parentId))
@@ -64,6 +69,8 @@ public class InternxtClient : IInternxtClient
         {
             throw new Exception(result.ErrorOutput);
         }
+        
+        return uuid;
     }
 
     private async Task<ExecuteResult> ExecuteAsync(string args)
@@ -101,5 +108,6 @@ public interface IInternxtClient
     Task<List<InternxtItem>> ListAsync(string id);
     Task<InternxtUploadResult> UploadAsync(string filePath, string id);
     Task MoveToTrashAsync(string id);
-    Task CreateFolderAsync(string folderName, string parentId);
+    Task<string> CreateFolderAsync(string folderName);
+    Task<string> CreateFolderAsync(string folderName, string parentId);
 }

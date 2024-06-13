@@ -3,7 +3,7 @@
 [TestFixture]
 public class InternxtClientUploadTests : InternxtClientTestBase
 {
-    private const string UploadFolderId = "996c383b-9507-4d5d-9af5-9d90455fa8f0";
+    private string _folderId;
     
     public override async Task Setup()
     {
@@ -11,12 +11,13 @@ public class InternxtClientUploadTests : InternxtClientTestBase
         var loginData = GetTestLogin();
         var result = await Client.LoginAsync(loginData.Username, loginData.Password);
         Assert.That(result, Is.EqualTo(true));
+        _folderId = await Client.CreateFolderAsync("TestFolder");
     }
 
     [Test]
     public async Task Upload_Success()
     {
-        var result = await Client.UploadAsync("sample\\test.txt", UploadFolderId);
+        var result = await Client.UploadAsync("sample\\test.txt", _folderId);
         Assert.Multiple(() =>
         {
             Assert.That(result.FileId, Is.Not.Null);

@@ -15,6 +15,17 @@ public class InternxtClientTestBase
         var internxtCliPath = userProfilePath + "\\AppData\\Roaming\\nvm\\v20.14.0\\node_modules\\@internxt\\cli\\bin\\run.js";
         Client = new InternxtClient(internxtCliPath, nodeJsPath);
     }
+    
+    [TearDown]
+    public async Task TearDown()
+    {
+        var items = await Client.ListAsync();
+        var folder = items.FirstOrDefault(i => i.Name == "TestFolder");
+        if (folder != null)
+        {
+            await Client.MoveToTrashAsync(folder.Id);
+        }
+    }
 
     protected LoginData GetTestLogin()
     {

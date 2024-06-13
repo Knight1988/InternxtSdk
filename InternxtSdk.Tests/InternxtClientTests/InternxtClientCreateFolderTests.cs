@@ -10,17 +10,6 @@ public class InternxtClientCreateFolderTests : InternxtClientTestBase
         var result = await Client.LoginAsync(loginData.Username, loginData.Password);
         Assert.That(result, Is.EqualTo(true));
     }
-    
-    [TearDown]
-    public async Task TearDown()
-    {
-        var items = await Client.ListAsync();
-        var folder = items.FirstOrDefault(i => i.Name == "TestFolder");
-        if (folder != null)
-        {
-            await Client.MoveToTrashAsync(folder.Id);
-        }
-    }
 
     [Test]
     public async Task CreateFolder_Success()
