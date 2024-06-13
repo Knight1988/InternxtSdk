@@ -43,6 +43,15 @@ public class InternxtClient : IInternxtClient
         }
         return ResultParser.ParseInternxtUploadResult(result.NormalOutput);
     }
+    
+    public async Task MoveToTrashAsync(string id)
+    {
+        var result = await ExecuteAsync($"trash -n --id {id}");
+        if (!result.NormalOutput.Contains("File trashed successfully"))
+        {
+            throw new Exception(result.ErrorOutput);
+        }
+    }
 
     private async Task<ExecuteResult> ExecuteAsync(string args)
     {
@@ -78,4 +87,5 @@ public interface IInternxtClient
     Task<List<InternxtItem>> ListAsync();
     Task<List<InternxtItem>> ListAsync(string id);
     Task<InternxtUploadResult> UploadAsync(string filePath, string id);
+    Task MoveToTrashAsync(string id);
 }
