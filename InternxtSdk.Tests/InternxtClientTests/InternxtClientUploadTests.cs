@@ -17,7 +17,10 @@ public class InternxtClientUploadTests : InternxtClientTestBase
     public async Task Upload_Success()
     {
         var result = await Client.UploadAsync("sample\\test.txt", UploadFolderId);
-        Assert.IsNotNull(result.FileId);
-        Assert.IsNotNull(result.Uuid);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.FileId, Is.Not.Null);
+            Assert.That(result.Uuid, Is.Not.Null);
+        });
     }
 }
