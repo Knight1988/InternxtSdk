@@ -1,7 +1,5 @@
 ﻿using System.Diagnostics;
-using System.Text;
 using InternxtSdk.Exceptions;
-using Microsoft.VisualBasic.FileIO;
 
 namespace InternxtSdk;
 
@@ -81,8 +79,8 @@ public class InternxtClient : IInternxtClient
         };
 
         var process = Process.Start(processStartInfo);
-        var normalOutput = process.StandardOutput.ReadToEnd();
-        var errorOutput = process.StandardError.ReadToEnd();
+        var normalOutput = await process!.StandardOutput.ReadToEndAsync();
+        var errorOutput = await process.StandardError.ReadToEndAsync();
         await process.WaitForExitAsync();
 
         return new ExecuteResult()

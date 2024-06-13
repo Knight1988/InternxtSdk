@@ -5,7 +5,7 @@ using Microsoft.VisualBasic.FileIO;
 
 namespace InternxtSdk;
 
-public class ResultParser
+public static class ResultParser
 {
     public static List<InternxtItem> ParseInternxtItems(string normalOutput)
     {
