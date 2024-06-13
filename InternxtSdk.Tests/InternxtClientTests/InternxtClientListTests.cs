@@ -25,9 +25,12 @@ public class InternxtClientListTests : InternxtClientTestBase
         var list = await Client.ListAsync("498a8bea-56e8-4ac5-83da-5bfef47f19bd");
         Assert.That(list, Is.Not.Null);
         Assert.That(list.Count, Is.EqualTo(2));
-        Assert.That(list[0].Name, Is.EqualTo("Test Folder"));
-        Assert.That(list[0].Type, Is.EqualTo("folder"));
-        Assert.That(list[1].Name, Is.EqualTo("SYOHIN.zip"));
-        Assert.That(list[1].Type, Is.EqualTo("file"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(list[0].Name, Is.EqualTo("Test Folder"));
+            Assert.That(list[0].Type, Is.EqualTo("folder"));
+            Assert.That(list[1].Name, Is.EqualTo("SYOHIN.zip"));
+            Assert.That(list[1].Type, Is.EqualTo("file"));
+        });
     }
 }
