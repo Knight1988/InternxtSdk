@@ -1,4 +1,4 @@
-﻿namespace InternxtSdk;
+﻿namespace InternxtSdk.Results;
 
 public class ExecuteResult
 {
