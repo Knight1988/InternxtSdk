@@ -17,29 +17,29 @@ public class InternxtClient : IInternxtClient
 
     public async Task<bool> LoginAsync(string username, string password)
     {
-        var (normalOutput, errorOutput) = await ExecuteAsync($"login -n -e {username} -p {password}");
-        return normalOutput.Contains($"Succesfully logged in to: {username}");
+        var result = await ExecuteAsync($"login -n -e {username} -p {password}");
+        return result.NormalOutput.Contains($"Succesfully logged in to: {username}");
     }
 
     public async Task<List<InternxtItem>> ListAsync()
     {
-        var (normalOutput, errorOutput) = await ExecuteAsync($"list -n --csv");
-        return ResultParser.ParseInternxtItems(normalOutput);
+        var result = await ExecuteAsync($"list -n --csv");
+        return ResultParser.ParseInternxtItems(result.NormalOutput);
     }
 
     public async Task<List<InternxtItem>> ListAsync(string id)
     {
-        var (normalOutput, errorOutput) = await ExecuteAsync($"list -n --csv -f {id}");
-        return ResultParser.ParseInternxtItems(normalOutput);
+        var result = await ExecuteAsync($"list -n --csv -f {id}");
+        return ResultParser.ParseInternxtItems(result.NormalOutput);
     }
 
     public async Task<InternxtUploadResult> UploadAsync(string filePath, string id)
     {
-        var (normalOutput, errorOutput) = await ExecuteAsync($"upload --json --file {filePath} --id {id}");
-        return ResultParser.ParseInternxtUploadResult(normalOutput);
+        var result = await ExecuteAsync($"upload --json --file {filePath} --id {id}");
+        return ResultParser.ParseInternxtUploadResult(result.NormalOutput);
     }
 
-    private async Task<(string normalOutput, string errorOutput)> ExecuteAsync(string args)
+    private async Task<ExecuteResult> ExecuteAsync(string args)
     {
         var processStartInfo = new ProcessStartInfo
         {
@@ -56,7 +56,12 @@ public class InternxtClient : IInternxtClient
         var errorOutput = process.StandardError.ReadToEnd();
         await process.WaitForExitAsync();
 
-        return (normalOutput, errorOutput);
+        return new ExecuteResult()
+        {
+            NormalOutput = normalOutput,
+            ErrorOutput = errorOutput,
+            Command = args
+        };
     }
 }
 
