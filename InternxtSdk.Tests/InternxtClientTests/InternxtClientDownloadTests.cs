@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using InternxtSdk.Exceptions;
 
 namespace InternxtSdk.Tests.InternxtClientTests;
 
@@ -43,5 +44,15 @@ public class InternxtClientDownloadTests : InternxtClientTestBase
         var act = async () => await Client.DownloadAsync(_fileId, "download", true, false);
         
         await act.Should().ThrowAsync<DirectoryNotFoundException>();
+    }
+
+    [Test]
+    public async Task Download_NotOverwrite_ThrowFileExist()
+    {
+        await Client.DownloadAsync(_fileId, "download", true, true);
+        
+        var act = async () => await Client.DownloadAsync(_fileId, "download");
+        
+        await act.Should().ThrowAsync<FileExistException>();
     }
 }

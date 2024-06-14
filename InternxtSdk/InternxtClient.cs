@@ -96,6 +96,10 @@ public class InternxtClient : IInternxtClient
         {
             throw new DirectoryNotFoundException();
         }
+        if (result.NormalOutput.Contains("File already exists"))
+        {
+            throw new FileExistException();
+        }
         if (!result.NormalOutput.Contains("File downloaded successfully"))
         {
             throw new Exception(result.ErrorOutput);
