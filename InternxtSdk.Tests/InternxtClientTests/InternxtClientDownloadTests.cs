@@ -1,4 +1,6 @@
-﻿namespace InternxtSdk.Tests.InternxtClientTests;
+﻿using FluentAssertions;
+
+namespace InternxtSdk.Tests.InternxtClientTests;
 
 [TestFixture]
 public class InternxtClientDownloadTests : InternxtClientTestBase
@@ -28,5 +30,18 @@ public class InternxtClientDownloadTests : InternxtClientTestBase
     {
         await Client.DownloadAsync(_fileId, "download", true);
         Assert.That(File.Exists("download\\test.txt"), Is.True);
+    }
+
+    [Test]
+    public async Task Download_Overwrite_ThrowDirectoryNotExist()
+    {
+        if (Directory.Exists("download"))
+        {
+            Directory.Delete("download", true);
+        }
+
+        var act = async () => await Client.DownloadAsync(_fileId, "download", true, false);
+        
+        await act.Should().ThrowAsync<DirectoryNotFoundException>();
     }
 }

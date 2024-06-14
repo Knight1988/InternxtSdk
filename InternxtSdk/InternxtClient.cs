@@ -92,6 +92,10 @@ public class InternxtClient : IInternxtClient
         }
 
         var result = await ExecuteAsync(args);
+        if (result.NormalOutput.Contains("ENOENT: no such file or directory"))
+        {
+            throw new DirectoryNotFoundException();
+        }
         if (!result.NormalOutput.Contains("File downloaded successfully"))
         {
             throw new Exception(result.ErrorOutput);
