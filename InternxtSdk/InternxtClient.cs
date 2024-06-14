@@ -40,13 +40,15 @@ public class InternxtClient : IInternxtClient
         {
             throw new FileExistException("File already exists");
         }
+
         return ResultParser.ParseInternxtUploadResult(result.NormalOutput);
     }
-    
+
     public async Task MoveToTrashAsync(string id)
     {
         var result = await ExecuteAsync($"trash -n --id {id}");
-        if (!result.NormalOutput.Contains("File trashed successfully") && !result.NormalOutput.Contains("Folder trashed successfully"))
+        if (!result.NormalOutput.Contains("File trashed successfully") &&
+            !result.NormalOutput.Contains("Folder trashed successfully"))
         {
             throw new Exception(result.ErrorOutput);
         }
@@ -64,14 +66,36 @@ public class InternxtClient : IInternxtClient
         {
             command += $" --id {parentId}";
         }
+
         var result = await ExecuteAsync(command);
         var uuid = ResultParser.ParseInternxtCreateFolderResult(result.NormalOutput);
         if (string.IsNullOrEmpty(uuid))
         {
             throw new Exception(result.ErrorOutput);
         }
-        
+
         return uuid;
+    }
+
+    public async Task DownloadAsync(string fileId, string destinationPath, bool isOverwrite = false,
+        bool createDirectoryIfNotExist = true)
+    {
+        if (createDirectoryIfNotExist && !Directory.Exists(destinationPath))
+        {
+            Directory.CreateDirectory(destinationPath);
+        }
+
+        var args = $"download --id {fileId} --directory {destinationPath}";
+        if (isOverwrite)
+        {
+            args += " --overwrite";
+        }
+
+        var result = await ExecuteAsync(args);
+        if (!result.NormalOutput.Contains("File downloaded successfully"))
+        {
+            throw new Exception(result.ErrorOutput);
+        }
     }
 
     private async Task<ExecuteResult> ExecuteAsync(string args)
@@ -111,4 +135,7 @@ public interface IInternxtClient
     Task MoveToTrashAsync(string id);
     Task<string> CreateFolderAsync(string folderName);
     Task<string> CreateFolderAsync(string folderName, string parentId);
+
+    Task DownloadAsync(string fileId, string destinationPath, bool isOverwrite = false,
+        bool createDirectoryIfNotExist = true);
 }
