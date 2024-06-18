@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternxtSdk", "InternxtSdk\InternxtSdk.csproj", "{4B571757-3632-47D7-8895-772718B926FE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkKnight.InternxtSdk", "DarkKnight.InternxtSdk\DarkKnight.InternxtSdk.csproj", "{4B571757-3632-47D7-8895-772718B926FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternxtSdk.Tests", "InternxtSdk.Tests\InternxtSdk.Tests.csproj", "{8FE3711C-9A68-47E1-A599-9E9937B78F9C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkKnight.InternxtSdk.Tests", "DarkKnight.InternxtSdk.Tests\DarkKnight.InternxtSdk.Tests.csproj", "{8FE3711C-9A68-47E1-A599-9E9937B78F9C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

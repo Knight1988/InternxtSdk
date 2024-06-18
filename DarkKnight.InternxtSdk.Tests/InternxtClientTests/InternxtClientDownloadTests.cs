@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
-using InternxtSdk.Exceptions;
+using DarkKnight.InternxtSdk.Exceptions;
 
-namespace InternxtSdk.Tests.InternxtClientTests;
+namespace DarkKnight.InternxtSdk.Tests.InternxtClientTests;
 
 [TestFixture]
 public class InternxtClientDownloadTests : InternxtClientTestBase

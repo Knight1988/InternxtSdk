@@ -1,4 +1,4 @@
-﻿namespace InternxtSdk.Exceptions;
+﻿namespace DarkKnight.InternxtSdk.Exceptions;
 
 public class FileExistException : Exception
 {

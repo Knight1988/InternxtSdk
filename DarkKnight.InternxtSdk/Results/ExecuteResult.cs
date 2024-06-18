@@ -1,4 +1,4 @@
-﻿namespace InternxtSdk.Results;
+﻿namespace DarkKnight.InternxtSdk.Results;
 
 public class ExecuteResult
 {

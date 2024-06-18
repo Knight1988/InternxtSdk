@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
-using InternxtSdk.Exceptions;
-using InternxtSdk.Results;
+using DarkKnight.InternxtSdk.Exceptions;
+using DarkKnight.InternxtSdk.Results;
 
-namespace InternxtSdk;
+namespace DarkKnight.InternxtSdk;
 
 public class InternxtClient : IInternxtClient
 {

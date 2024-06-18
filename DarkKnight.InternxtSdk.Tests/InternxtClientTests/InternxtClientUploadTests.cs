@@ -1,4 +1,4 @@
-﻿namespace InternxtSdk.Tests.InternxtClientTests;
+﻿namespace DarkKnight.InternxtSdk.Tests.InternxtClientTests;
 
 [TestFixture]
 public class InternxtClientUploadTests : InternxtClientTestBase

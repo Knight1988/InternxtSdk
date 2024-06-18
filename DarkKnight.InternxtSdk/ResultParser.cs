@@ -1,10 +1,10 @@
 ﻿using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using InternxtSdk.Results;
+using DarkKnight.InternxtSdk.Results;
 using Microsoft.VisualBasic.FileIO;
 
-namespace InternxtSdk;
+namespace DarkKnight.InternxtSdk;
 
 public static class ResultParser
 {

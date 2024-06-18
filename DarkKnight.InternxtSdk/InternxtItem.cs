@@ -1,4 +1,4 @@
-﻿namespace InternxtSdk;
+﻿namespace DarkKnight.InternxtSdk;
 
 public class InternxtItem
 {

@@ -1,4 +1,4 @@
-﻿namespace InternxtSdk.Tests;
+﻿namespace DarkKnight.InternxtSdk.Tests;
 
 public class LoginData
 {
