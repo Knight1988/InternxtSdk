@@ -4,6 +4,15 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <Title>DarkKnight.InternxtSdk</Title>
+        <Description>a Warper for internxt cli</Description>
+        <Copyright>MIT</Copyright>
+        <PackageProjectUrl>https://github.com/Knight1988/InternxtSdk</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/Knight1988/InternxtSdk</RepositoryUrl>
+        <PackageTags>DarkKnight,Internxt</PackageTags>
+        <Version>0.1.0</Version>
+        <AssemblyVersion>0.1.0</AssemblyVersion>
+        <FileVersion>0.1.0</FileVersion>
     </PropertyGroup>
 
 </Project>
