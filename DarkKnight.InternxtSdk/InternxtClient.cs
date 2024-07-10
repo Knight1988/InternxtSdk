@@ -41,6 +41,11 @@ public class InternxtClient : IInternxtClient
             throw new FileExistException("File already exists");
         }
 
+        if (!result.NormalOutput.Contains("File uploaded in"))
+        {
+            throw new Exception(result.ErrorOutput);
+        }
+
         return ResultParser.ParseInternxtUploadResult(result.NormalOutput);
     }
 

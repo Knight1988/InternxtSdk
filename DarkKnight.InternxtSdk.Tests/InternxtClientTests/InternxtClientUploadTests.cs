@@ -4,7 +4,7 @@
 public class InternxtClientUploadTests : InternxtClientTestBase
 {
     private string _folderId;
-    
+
     public override async Task Setup()
     {
         await base.Setup();
@@ -22,6 +22,22 @@ public class InternxtClientUploadTests : InternxtClientTestBase
         {
             Assert.That(result.FileId, Is.Not.Null);
             Assert.That(result.Uuid, Is.Not.Null);
+        });
+    }
+
+    [Test]
+    public void Upload_ThrowsException()
+    {
+        // Arrange: Prepare the conditions that will cause the operation to throw an exception.
+        // This typically involves setting up mocks, but in your case it could be a bad input.
+        string invalidFilePath = "invalid\\path.txt";
+        string invalidFolderId = "invalidId";
+
+        // Assert: Specify that the operation should throw an exception.
+        Assert.ThrowsAsync<Exception>(async () =>
+        {
+            // Act: Perform the operation that is expected to throw an exception.
+            await Client.UploadAsync(invalidFilePath, invalidFolderId);
         });
     }
 }
