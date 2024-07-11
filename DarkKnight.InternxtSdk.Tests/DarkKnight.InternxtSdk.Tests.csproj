@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="FluentAssertions" Version="6.12.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0"/>
         <PackageReference Include="NUnit" Version="3.13.3"/>
         <PackageReference Include="NUnit3TestAdapter" Version="4.2.1"/>
@@ -17,12 +18,19 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\InternxtSdk\InternxtSdk.csproj" />
+      <ProjectReference Include="..\DarkKnight.InternxtSdk\DarkKnight.InternxtSdk.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <None Remove="login.json" />
       <Content Include="login.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="sample\test.txt" />
+      <Content Include="sample\test.txt">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
     </ItemGroup>

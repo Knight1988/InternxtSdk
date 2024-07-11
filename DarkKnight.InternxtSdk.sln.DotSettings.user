@@ -1,0 +1,14 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/Highlighting/HighlightingSourceSnapshotLocation/@EntryValue">C:\Users\anh.phamviet\AppData\Local\JetBrains\Rider2024.1\resharper-host\temp\Rider\vAny\CoverageData\_DarkKnight.InternxtSdk.-1476374457\Snapshot\snapshot.utdcvr</s:String>
+	
+	
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=166f0f6f_002Da1ec_002D4da6_002Db09a_002D4548cd1a6d71/@EntryIndexedValue">&lt;SessionState ContinuousTestingIsOn="True" ContinuousTestingMode="3" Name="All tests from &amp;lt;InternxtSdk.Tests&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Project Location="E:\repos\InternxtSdk\InternxtSdk.Tests" Presentation="&amp;lt;InternxtSdk.Tests&amp;gt;" /&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=4e30578b_002Ddccc_002D4c96_002D9d5b_002D01c926bb0bcb/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Login_CorrectPassword_ReturnTrue" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::8FE3711C-9A68-47E1-A599-9E9937B78F9C::net6.0::DarkKnight.InternxtSdk.Tests.InternxtClientTests.InternxtClientLoginTests.Login_CorrectPassword_ReturnTrue&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::8FE3711C-9A68-47E1-A599-9E9937B78F9C::net6.0::DarkKnight.InternxtSdk.Tests.InternxtClientTests.InternxtClientUploadTests.Upload_ThrowsException&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::8FE3711C-9A68-47E1-A599-9E9937B78F9C::net6.0::DarkKnight.InternxtSdk.Tests.InternxtClientTests.InternxtClientUploadTests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
