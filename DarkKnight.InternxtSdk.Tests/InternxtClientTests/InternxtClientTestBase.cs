@@ -29,8 +29,9 @@ public class InternxtClientTestBase
 
     protected LoginData GetTestLogin()
     {
-        var loginJson = File.ReadAllText("login.json");
-        var loginData = JsonConvert.DeserializeObject<LoginData>(loginJson);
+        var username = Environment.GetEnvironmentVariable("TEST_USERNAME");
+        var password = Environment.GetEnvironmentVariable("TEST_PASSWORD");
+        var loginData = new LoginData { Username = username, Password = password };
         return loginData;
     }
 }
