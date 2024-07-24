@@ -15,7 +15,7 @@ public class InternxtClientMoveToTrashTests : InternxtClientTestBase
         var folderId = await Client.CreateFolderAsync("TestFolder");
         // Upload a file
         
-        var testFilePath = Path.Combine(Directory.GetCurrentDirectory(), "sample\\test.txt");
+        var testFilePath = Path.Combine(Directory.GetCurrentDirectory(), "sample", "test.txt");
         var uploadResult = await Client.UploadAsync(testFilePath, folderId);
         Assert.Multiple(() =>
         {
