@@ -27,19 +27,22 @@ public static class InternxtVersionManager
         return dict ?? throw new InvalidOperationException();
     }
 
-    public static async Task<(string nodePath, string internxtPath)> DownloadVersionAsync(string version)
+    public static async Task<(string nodePath, string internxtPath)> DownloadVersionAsync(string version, string platform)
     {
         var versionList = GetVersionList();
-        if (!versionList.ContainsKey(version))
+        if (!versionList.ContainsKey(version + "-" + platform))
         {
             throw new VersionNotExistException($"Version {version} does not exist");
         }
 
         var extractPath = Path.Combine(Directory.GetCurrentDirectory(), ".nvm");
         var nodeVersion = versionList[version].NodeVersion;
-        var nodePath = Path.Combine(extractPath, $"v{nodeVersion}", "node.exe");
-        var internxtPath = Path.Combine(extractPath, $"v{nodeVersion}", "node_modules", "@internxt", "cli", "bin",
-            "run.js");
+        var nodePath = platform.ToLower() == "linux"
+            ? Path.Combine(extractPath, $"v{nodeVersion}", "bin", "node")
+            : Path.Combine(extractPath, $"v{nodeVersion}", "node.exe");
+        var internxtPath = platform.ToLower() == "linux"
+            ? Path.Combine(extractPath, $"v{nodeVersion}", "lib", "node_modules", "@internxt", "cli", "bin", "run.js")
+            : Path.Combine(extractPath, $"v{nodeVersion}", "node_modules", "@internxt", "cli", "bin", "run.js");
 
         if (File.Exists(nodePath) && File.Exists(internxtPath)) return (nodePath, internxtPath);
 
