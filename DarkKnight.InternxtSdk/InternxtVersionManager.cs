@@ -30,14 +30,15 @@ public static class InternxtVersionManager
     public static async Task<(string nodePath, string internxtPath)> DownloadVersionAsync(string version,
         string platform)
     {
+        var versionKey = version + "-" + platform;
         var versionList = GetVersionList();
-        if (!versionList.ContainsKey(version + "-" + platform))
+        if (!versionList.ContainsKey(versionKey))
         {
             throw new VersionNotExistException($"Version {version} does not exist");
         }
 
         var extractPath = Path.Combine(Directory.GetCurrentDirectory(), ".nvm");
-        var nodeVersion = versionList[version + "-" + platform].NodeVersion;
+        var nodeVersion = versionList[versionKey].NodeVersion;
         var nodePath = platform.ToLower() == "linux"
             ? Path.Combine(extractPath, $"v{nodeVersion}", "bin", "node")
             : Path.Combine(extractPath, $"v{nodeVersion}", "node.exe");
@@ -47,7 +48,7 @@ public static class InternxtVersionManager
 
         if (File.Exists(nodePath) && File.Exists(internxtPath)) return (nodePath, internxtPath);
 
-        var downloadUrl = versionList[version].DownloadUrl;
+        var downloadUrl = versionList[versionKey].DownloadUrl;
         var downloadedFile = await DownloadFileAsync(downloadUrl, extractPath);
         // extract downloadedFile as zip
         ZipFile.ExtractToDirectory(downloadedFile, extractPath, true);
