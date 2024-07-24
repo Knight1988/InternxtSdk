@@ -18,7 +18,6 @@ public class InternxtClient : IInternxtClient
     public async Task<bool> LoginAsync(string username, string password)
     {
         var result = await ExecuteAsync($"login -n -e {username} -p {password}");
-        Console.WriteLine(result.NormalOutput);
         return result.NormalOutput.Contains($"Succesfully logged in to: {username}");
     }
 
