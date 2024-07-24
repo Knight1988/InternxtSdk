@@ -17,7 +17,8 @@ public class InternxtClientUploadTests : InternxtClientTestBase
     [Test]
     public async Task Upload_Success()
     {
-        var result = await Client.UploadAsync("sample\\test.txt", _folderId);
+        var testFilePath = Path.Combine(Directory.GetCurrentDirectory(), "sample\\test.txt");
+        var result = await Client.UploadAsync(testFilePath, _folderId);
         Assert.Multiple(() =>
         {
             Assert.That(result.FileId, Is.Not.Null);
