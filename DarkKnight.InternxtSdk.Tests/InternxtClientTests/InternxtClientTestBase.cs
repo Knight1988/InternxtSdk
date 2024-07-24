@@ -9,10 +9,13 @@ public class InternxtClientTestBase
     [SetUp]
     public virtual async Task Setup()
     {
-        await Task.Yield();
-        var userProfilePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        var nodeJsPath = userProfilePath + "\\AppData\\Roaming\\nvm\\v20.14.0\\node.exe";
-        var internxtCliPath = userProfilePath + "\\AppData\\Roaming\\nvm\\v20.14.0\\node_modules\\@internxt\\cli\\bin\\run.js";
+        // await Task.Yield();
+        // var userProfilePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        // var nodeJsPath = userProfilePath + "\\AppData\\Roaming\\nvm\\v20.14.0\\node.exe";
+        // var internxtCliPath = userProfilePath + "\\AppData\\Roaming\\nvm\\v20.14.0\\node_modules\\@internxt\\cli\\bin\\run.js";
+        // Client = new InternxtClient(internxtCliPath, nodeJsPath);
+        // Client = new InternxtClient();
+        var (nodeJsPath, internxtCliPath) = await InternxtVersionManager.DownloadVersionAsync("1.1.2");
         Client = new InternxtClient(internxtCliPath, nodeJsPath);
     }
     

@@ -19,4 +19,8 @@
     <ItemGroup>
         <None Include="..\README.md" Pack="true" PackagePath="\"/>
     </ItemGroup>
+    <ItemGroup>
+      <None Remove="Resources\download.json" />
+      <EmbeddedResource Include="Resources\download.json" />
+    </ItemGroup>
 </Project>

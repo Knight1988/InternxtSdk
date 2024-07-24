@@ -148,7 +148,6 @@ public interface IInternxtClient
     Task MoveToTrashAsync(string id);
     Task<string> CreateFolderAsync(string folderName);
     Task<string> CreateFolderAsync(string folderName, string parentId);
-
     Task DownloadAsync(string fileId, string destinationPath, bool isOverwrite = false,
         bool createDirectoryIfNotExist = true);
 }
