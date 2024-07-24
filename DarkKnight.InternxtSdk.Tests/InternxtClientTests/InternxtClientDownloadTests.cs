@@ -31,8 +31,9 @@ public class InternxtClientDownloadTests : InternxtClientTestBase
     [Test]
     public async Task Download_CreateFolder_Overwrite_Success()
     {
-        await Client.DownloadAsync(_fileId, "download", true);
-        Assert.That(File.Exists("download\\test.txt"), Is.True);
+        var downloadFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "download");
+        await Client.DownloadAsync(_fileId, downloadFolderPath, true);
+        Assert.That(File.Exists(Path.Combine(downloadFolderPath, "test.txt")), Is.True);
     }
 
     [Test]
