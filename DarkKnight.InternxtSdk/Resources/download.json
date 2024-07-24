@@ -1,6 +1,6 @@
 {
-  "1.1.2": {
-    "DownloadUrl": "https://github.com/Knight1988/InternxtSdk/releases/download/internxt-cli-1.1.2/v1.1.2.zip",
+  "1.1.2-windows": {
+    "DownloadUrl": "https://github.com/Knight1988/InternxtSdk/releases/download/internxt-cli-1.1.2/v1.1.2-windows.zip",
     "NodeVersion": "20.15.0",
     "InternxtVersion": "1.1.2"
   },

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Runtime.InteropServices;
+using Newtonsoft.Json;
 
 namespace DarkKnight.InternxtSdk.Tests.InternxtClientTests;
 
@@ -9,10 +10,11 @@ public class InternxtClientTestBase
     [SetUp]
     public virtual async Task Setup()
     {
-        var (nodeJsPath, internxtCliPath) = await InternxtVersionManager.DownloadVersionAsync("1.1.2", "linux");
+        var platform = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "windows" : "linux";
+        var (nodeJsPath, internxtCliPath) = await InternxtVersionManager.DownloadVersionAsync("1.1.2", platform);
         Client = new InternxtClient(internxtCliPath, nodeJsPath);
     }
-    
+
     [TearDown]
     public async Task TearDown()
     {

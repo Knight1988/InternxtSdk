@@ -27,7 +27,8 @@ public static class InternxtVersionManager
         return dict ?? throw new InvalidOperationException();
     }
 
-    public static async Task<(string nodePath, string internxtPath)> DownloadVersionAsync(string version, string platform)
+    public static async Task<(string nodePath, string internxtPath)> DownloadVersionAsync(string version,
+        string platform)
     {
         var versionList = GetVersionList();
         if (!versionList.ContainsKey(version + "-" + platform))
@@ -36,7 +37,7 @@ public static class InternxtVersionManager
         }
 
         var extractPath = Path.Combine(Directory.GetCurrentDirectory(), ".nvm");
-        var nodeVersion = versionList[version].NodeVersion;
+        var nodeVersion = versionList[version + "-" + platform].NodeVersion;
         var nodePath = platform.ToLower() == "linux"
             ? Path.Combine(extractPath, $"v{nodeVersion}", "bin", "node")
             : Path.Combine(extractPath, $"v{nodeVersion}", "node.exe");
@@ -49,7 +50,7 @@ public static class InternxtVersionManager
         var downloadUrl = versionList[version].DownloadUrl;
         var downloadedFile = await DownloadFileAsync(downloadUrl, extractPath);
         // extract downloadedFile as zip
-        ZipFile.ExtractToDirectory(downloadedFile, extractPath);
+        ZipFile.ExtractToDirectory(downloadedFile, extractPath, true);
 
         return (nodePath, internxtPath);
     }
