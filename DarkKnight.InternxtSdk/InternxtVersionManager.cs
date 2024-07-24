@@ -34,7 +34,7 @@ public static class InternxtVersionManager
         var versionList = GetVersionList();
         if (!versionList.ContainsKey(versionKey))
         {
-            throw new VersionNotExistException($"Version {version} does not exist");
+            throw new VersionNotExistException($"Version {versionKey} does not exist");
         }
 
         var extractPath = Path.Combine(Directory.GetCurrentDirectory(), ".nvm");

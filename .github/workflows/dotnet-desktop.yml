@@ -32,6 +32,9 @@ jobs:
         run: dotnet build --configuration Release --no-restore
 
       - name: Test
+        env:
+          USERNAME: ${{secrets.TEST_USERNAME}}
+          PASSWORD: ${{secrets.TEST_PASSWORD}}
         run: dotnet test --no-restore --verbosity normal
 
       - name: Publish and Push to NuGet
