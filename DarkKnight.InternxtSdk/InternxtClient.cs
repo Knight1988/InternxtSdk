@@ -123,7 +123,7 @@ public class InternxtClient : IInternxtClient
             CreateNoWindow = true,
         };
         
-        Console.WriteLine($"Executing command: {processStartInfo.FileName} {processStartInfo.Arguments}");
+        Console.WriteLine($"Executing command: internxt {args}");
 
         var process = Process.Start(processStartInfo);
         var normalOutput = await process!.StandardOutput.ReadToEndAsync();
