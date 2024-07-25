@@ -18,8 +18,7 @@ public class InternxtClientDownloadTests : InternxtClientTestBase
         var folderId = await Client.CreateFolderAsync(TestFolderName);
         // Upload a file
         
-        var testFilePath = Path.Combine(Directory.GetCurrentDirectory(), "sample", "test.txt");
-        var uploadResult = await Client.UploadAsync(testFilePath, folderId);
+        var uploadResult = await Client.UploadAsync(TestFilePath, folderId);
         Assert.Multiple(() =>
         {
             Assert.That(uploadResult.FileId, Is.Not.Null);

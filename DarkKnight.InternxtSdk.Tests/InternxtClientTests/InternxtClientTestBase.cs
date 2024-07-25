@@ -8,6 +8,20 @@ public class InternxtClientTestBase
     protected IInternxtClient Client;
     protected static string TestFolderName { get; } = Guid.NewGuid().ToString();
 
+    protected static string TestFilePath
+    {
+        get
+        {
+            var testFilePath = Path.Combine(Directory.GetCurrentDirectory(), "sample", "test.txt");
+            if (File.Exists(testFilePath)) return testFilePath;
+            
+            Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "sample"));
+            File.WriteAllText(testFilePath, "test");
+
+            return testFilePath;
+        }
+    }
+
     [SetUp]
     public virtual async Task Setup()
     {

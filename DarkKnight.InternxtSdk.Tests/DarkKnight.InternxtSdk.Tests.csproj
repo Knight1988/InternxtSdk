@@ -23,9 +23,6 @@
 
     <ItemGroup>
       <None Remove="sample\test.txt" />
-      <Content Include="sample\test.txt">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
     </ItemGroup>
 
 </Project>

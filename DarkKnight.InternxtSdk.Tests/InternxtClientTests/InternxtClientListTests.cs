@@ -15,8 +15,7 @@ public class InternxtClientListTests : InternxtClientTestBase
         _testFolderId = await Client.CreateFolderAsync(TestFolderName);
         await Client.CreateFolderAsync("Test Folder", _testFolderId);
         
-        var testFilePath = Path.Combine(Directory.GetCurrentDirectory(), "sample", "test.txt");
-        await Client.UploadAsync(testFilePath, _testFolderId);
+        await Client.UploadAsync(TestFilePath, _testFolderId);
     }
 
     [Test]
