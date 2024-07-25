@@ -6,7 +6,7 @@ namespace DarkKnight.InternxtSdk.Tests.InternxtClientTests;
 public class InternxtClientTestBase
 {
     protected IInternxtClient Client;
-    protected static string TestFolderName { get; } = Guid.NewGuid().ToString();
+    protected static string TestFolderName { get; } = "Test-" + Guid.NewGuid();
 
     protected static string TestFilePath
     {
