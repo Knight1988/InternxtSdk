@@ -14,9 +14,10 @@ public class InternxtClientCreateFolderTests : InternxtClientTestBase
     [Test]
     public async Task CreateFolder_Success()
     {
-        await Client.CreateFolderAsync("TestFolder", string.Empty);
+        var folderName = "TestFolder-" + Guid.NewGuid();
+        await Client.CreateFolderAsync(folderName, string.Empty);
         var items = await Client.ListAsync();
-        var folder = items.FirstOrDefault(i => i.Name == "TestFolder");
+        var folder = items.FirstOrDefault(i => i.Name == folderName);
         Assert.That(folder, Is.Not.Null);
     }
 }

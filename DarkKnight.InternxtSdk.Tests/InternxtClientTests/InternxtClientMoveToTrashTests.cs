@@ -12,7 +12,7 @@ public class InternxtClientMoveToTrashTests : InternxtClientTestBase
         var loginResult = await Client.LoginAsync(loginData.Username, loginData.Password);
         Assert.That(loginResult, Is.EqualTo(true));
         // create test folder
-        var folderId = await Client.CreateFolderAsync("TestFolder");
+        var folderId = await Client.CreateFolderAsync("TestFolder-" + Guid.NewGuid());
         // Upload a file
         
         var testFilePath = Path.Combine(Directory.GetCurrentDirectory(), "sample", "test.txt");

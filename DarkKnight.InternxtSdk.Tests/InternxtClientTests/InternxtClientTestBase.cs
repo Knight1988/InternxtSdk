@@ -19,7 +19,7 @@ public class InternxtClientTestBase
     public async Task TearDown()
     {
         var items = await Client.ListAsync();
-        var folder = items.FirstOrDefault(i => i.Name == "TestFolder");
+        var folder = items.FirstOrDefault(i => i.Name.StartsWith("TestFolder"));
         if (folder != null)
         {
             await Client.MoveToTrashAsync(folder.Id);

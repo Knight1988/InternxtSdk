@@ -11,7 +11,7 @@ public class InternxtClientUploadTests : InternxtClientTestBase
         var loginData = GetTestLogin();
         var result = await Client.LoginAsync(loginData.Username, loginData.Password);
         Assert.That(result, Is.EqualTo(true));
-        _folderId = await Client.CreateFolderAsync("TestFolder");
+        _folderId = await Client.CreateFolderAsync("TestFolder-" + Guid.NewGuid());
     }
 
     [Test]
