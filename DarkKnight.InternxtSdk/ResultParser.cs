@@ -54,10 +54,9 @@ public static class ResultParser
 
     public static string ParseInternxtCreateFolderResult(string normalOutput)
     {
-        var regex = new Regex(@"([a-f|\d]{8}-[a-f|\d]{4}-[a-f|\d]{4}-[a-f|\d]{4}-[a-f|\d]{12})");
-        
-        var match = regex.Match(normalOutput);
+        var pattern = @"folder/([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})";
+        var match = Regex.Match(normalOutput, pattern, RegexOptions.IgnoreCase);
 
-        return match.Success ? match.Value : string.Empty;
+        return match.Success ? match.Groups[1].Value : string.Empty;
     }
 }
