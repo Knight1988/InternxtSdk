@@ -6,6 +6,7 @@ namespace DarkKnight.InternxtSdk.Tests.InternxtClientTests;
 public class InternxtClientTestBase
 {
     protected IInternxtClient Client;
+    protected static string TestFolderName { get; } = Guid.NewGuid().ToString();
 
     [SetUp]
     public virtual async Task Setup()
@@ -19,8 +20,8 @@ public class InternxtClientTestBase
     public async Task TearDown()
     {
         var items = await Client.ListAsync();
-        var folder = items.FirstOrDefault(i => i.Name.StartsWith("TestFolder"));
-        if (folder != null)
+        var folders = items.Where(i => i.Name.StartsWith("TestFolder") || i.Name == TestFolderName);
+        foreach (var folder in folders)
         {
             await Client.MoveToTrashAsync(folder.Id);
         }

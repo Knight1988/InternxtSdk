@@ -12,7 +12,7 @@ public class InternxtClientListTests : InternxtClientTestBase
         var result = await Client.LoginAsync(loginData.Username, loginData.Password);
         Assert.That(result, Is.EqualTo(true));
 
-        _testFolderId = await Client.CreateFolderAsync("TestFolder-" + Guid.NewGuid());
+        _testFolderId = await Client.CreateFolderAsync(TestFolderName);
         await Client.CreateFolderAsync("Test Folder", _testFolderId);
         
         var testFilePath = Path.Combine(Directory.GetCurrentDirectory(), "sample", "test.txt");
