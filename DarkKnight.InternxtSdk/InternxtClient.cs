@@ -122,11 +122,23 @@ public class InternxtClient : IInternxtClient
             UseShellExecute = false,
             CreateNoWindow = true,
         };
+        
+        Console.WriteLine($"Executing command: {processStartInfo.FileName} {processStartInfo.Arguments}");
 
         var process = Process.Start(processStartInfo);
         var normalOutput = await process!.StandardOutput.ReadToEndAsync();
         var errorOutput = await process.StandardError.ReadToEndAsync();
         await process.WaitForExitAsync();
+        
+        
+        if (!string.IsNullOrEmpty(normalOutput))
+        {
+            Console.WriteLine($"Command output: {normalOutput}");
+        }
+        if (!string.IsNullOrEmpty(errorOutput))
+        {
+            Console.WriteLine($"Command error output: {errorOutput}");
+        }
 
         return new ExecuteResult()
         {
