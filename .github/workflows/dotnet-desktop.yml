@@ -59,4 +59,4 @@ jobs:
           TAG=${GITHUB_REF#refs/tags/v}
           echo "tag=$TAG" >> $GITHUB_ENV
           dotnet pack --no-restore --configuration Release /p:PackageVersion="${TAG}"
-          dotnet nuget push "bin/Release/DarkKnight.InternxtSdk.${TAG}.nupkg" --api-key ${{secrets.NUGET_API_KEY}} --source https://nuget.org/
+          dotnet nuget push "./bin/Release/DarkKnight.InternxtSdk.${TAG}.nupkg" --api-key ${{secrets.NUGET_API_KEY}} --source https://nuget.org/
