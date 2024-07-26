@@ -57,4 +57,12 @@ public class InternxtClientDownloadTests : InternxtClientTestBase
         
         await act.Should().ThrowAsync<FileExistException>();
     }
+    
+    [Test]
+    public async Task Download_ThrowFileNotFoundException()
+    {
+        var act = async () => await Client.DownloadAsync(Guid.NewGuid().ToString(), "download");
+
+        await act.Should().ThrowAsync<FileNotFoundException>();
+    }
 }

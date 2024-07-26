@@ -105,6 +105,11 @@ public class InternxtClient : IInternxtClient
         {
             throw new FileExistException();
         }
+
+        if (result.ErrorOutput.Contains("[REPORTED_ERROR]: File not found") || result.ErrorOutput.Contains("[REPORTED_ERROR]: Invalid UUID"))
+        {
+            throw new FileNotFoundException();
+        }
         if (!result.NormalOutput.Contains("File downloaded successfully"))
         {
             throw new Exception(result.ErrorOutput);

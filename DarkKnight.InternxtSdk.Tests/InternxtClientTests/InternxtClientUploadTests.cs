@@ -30,8 +30,8 @@ public class InternxtClientUploadTests : InternxtClientTestBase
     {
         // Arrange: Prepare the conditions that will cause the operation to throw an exception.
         // This typically involves setting up mocks, but in your case it could be a bad input.
-        string invalidFilePath = "invalid\\path.txt";
-        string invalidFolderId = "invalidId";
+        var invalidFilePath = "invalid\\path.txt";
+        var invalidFolderId = "invalidId";
 
         // Assert: Specify that the operation should throw an exception.
         Assert.ThrowsAsync<Exception>(async () =>
