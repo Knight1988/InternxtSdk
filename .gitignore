@@ -1,5 +1,6 @@
 node_modules/
 .env
+.env.test.local
 *.log
 .DS_Store
 .internxt-cli/

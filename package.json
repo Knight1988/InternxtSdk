@@ -11,8 +11,12 @@
     "prebuild": "npm run clean",
     "start": "npm run build && node example.js",
     "demo": "npm run build && node example.js",
-    "test": "npm run build && node example.js",
-    "dev": "ts-node src/index.ts"
+    "dev": "ts-node src/index.ts",
+    "test": "mocha",
+    "test:unit": "mocha 'test/unit/**/*.test.ts'",
+    "test:integration": "mocha 'test/integration/**/*.test.ts'",
+    "test:watch": "mocha --watch",
+    "test:coverage": "echo 'Coverage not configured yet. Install nyc or c8 for coverage.'"
   },
   "keywords": [
     "internxt",
@@ -35,7 +39,13 @@
     "openpgp": "^6.2.2"
   },
   "devDependencies": {
+    "@types/chai": "^5.2.2",
+    "@types/mocha": "^10.0.10",
     "@types/node": "^24.7.1",
+    "@types/sinon": "^17.0.4",
+    "chai": "^6.2.0",
+    "mocha": "^11.7.4",
+    "sinon": "^21.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }

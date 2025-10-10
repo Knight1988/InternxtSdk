@@ -40,7 +40,10 @@ export interface LoginResult {
     email: string;
     uuid: string;
     rootFolderId: string;
+    [key: string]: any;
   };
+  token?: string;
+  mnemonic?: string;
 }
 
 export interface Folder {
