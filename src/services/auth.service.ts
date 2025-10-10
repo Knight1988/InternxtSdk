@@ -1,16 +1,16 @@
 import { Auth } from '@internxt/sdk';
-import { CryptoUtils } from '../utils/crypto';
 import { promises as fs } from 'fs';
-import * as path from 'path';
 import * as os from 'os';
-import { SDKConfig, Credentials, AppDetails } from '../types';
+import * as path from 'path';
+import { Credentials, InternalConfig } from '../types';
+import { CryptoUtils } from '../utils/crypto';
 
 export class AuthService {
-  private config: Required<SDKConfig> & { appDetails: AppDetails };
+  private config: InternalConfig;
   private cryptoUtils: CryptoUtils;
   private credentialsFile: string;
 
-  constructor(config: Required<SDKConfig> & { appDetails: AppDetails }) {
+  constructor(config: InternalConfig) {
     this.config = config;
     this.cryptoUtils = new CryptoUtils(config.appCryptoSecret);
     this.credentialsFile = path.join(
@@ -56,13 +56,13 @@ export class AuthService {
 
     const data = await authClient.loginAccess(loginDetails, cryptoProvider);
     const { user, newToken } = data;
-    
+
     // Decrypt mnemonic
     const clearMnemonic = this.cryptoUtils.decryptTextWithKey(
       user.mnemonic,
       password
     );
-    
+
     const credentials: Credentials = {
       user: {
         ...user,
@@ -74,7 +74,7 @@ export class AuthService {
 
     // Save credentials
     await this.saveCredentials(credentials);
-    
+
     return credentials;
   }
 

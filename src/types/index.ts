@@ -8,11 +8,23 @@ export interface SDKConfig {
   appCryptoSecret?: string;
   clientName?: string;
   clientVersion?: string;
+  desktopHeader?: string;
+}
+
+export interface InternalConfig {
+  apiUrl: string;
+  networkUrl: string;
+  appCryptoSecret: string;
+  clientName: string;
+  clientVersion: string;
+  desktopHeader?: string;
+  appDetails: AppDetails;
 }
 
 export interface AppDetails {
   clientName: string;
   clientVersion: string;
+  desktopHeader?: string;
 }
 
 export interface User {

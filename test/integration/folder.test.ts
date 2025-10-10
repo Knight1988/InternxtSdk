@@ -1,16 +1,16 @@
-import { expect, getTestCredentials, getTestConfig, TEST_TIMEOUT } from '../setup';
 import InternxtSDK from '../../src/index';
-import { Folder } from '../../src/types';
+import { expect, getTestConfig, getTestCredentials, TEST_TIMEOUT } from '../setup';
 
-describe('Folder Operations Integration Tests', function() {
+describe('Folder Operations Integration Tests', function () {
   this.timeout(TEST_TIMEOUT);
 
   let sdk: InternxtSDK;
   let credentials: ReturnType<typeof getTestCredentials>;
   let testConfig: ReturnType<typeof getTestConfig>;
-  let createdFolder: Folder | null = null;
+  let testFolderId: string | null = null;
+  let createdFolderIds: string[] = [];
 
-  before(async function() {
+  before(async function () {
     try {
       credentials = getTestCredentials();
       testConfig = getTestConfig();
@@ -25,16 +25,37 @@ describe('Folder Operations Integration Tests', function() {
       credentials.password,
       credentials.twoFactorCode
     );
+
+    // Create Test folder for integration tests
+    const rootContents = await sdk.list();
+    let testFolder = rootContents.folders.find(f => f.name === 'Test');
+
+    if (!testFolder) {
+      testFolder = await sdk.createFolder('Test');
+      console.log(`\n✓ Created Test folder (ID: ${testFolder.id})`);
+    } else {
+      console.log(`\n✓ Using existing Test folder (ID: ${testFolder.id})`);
+    }
+
+    testFolderId = testFolder.id;
   });
 
   after(async () => {
-    // Cleanup: Delete created test folder if exists
-    if (createdFolder) {
-      try {
-        // Note: SDK doesn't expose delete yet, but we track it for manual cleanup
-        console.log(`\n⚠️  Please manually delete test folder: ${createdFolder.name} (ID: ${createdFolder.id})`);
-      } catch (error) {
-        // Ignore cleanup errors
+    // Cleanup: Delete all created folders in reverse order (children first)
+    if (createdFolderIds.length > 0) {
+      console.log('\n🧹 Cleaning up test folders...');
+
+      for (const folderId of createdFolderIds.reverse()) {
+        try {
+          // Access the internal driveFolder service
+          const driveFolder = (sdk as any).driveFolder;
+          if (driveFolder && typeof driveFolder.deleteFolder === 'function') {
+            await driveFolder.deleteFolder(folderId);
+            console.log(`  ✓ Deleted folder ${folderId}`);
+          }
+        } catch (error: any) {
+          console.warn(`  ⚠️  Failed to delete folder ${folderId}: ${error.message}`);
+        }
       }
     }
 
@@ -54,10 +75,8 @@ describe('Folder Operations Integration Tests', function() {
       expect(contents.files).to.be.an('array');
     });
 
-    it('should list specific folder contents by ID', async () => {
-      // Create a test folder first
-      const testFolder = await sdk.createFolder(`list-test-${Date.now()}`);
-      const contents = await sdk.list(testFolder.id);
+    it('should list Test folder contents by ID', async () => {
+      const contents = await sdk.list(testFolderId!);
 
       expect(contents).to.have.property('folders');
       expect(contents).to.have.property('files');
@@ -68,12 +87,12 @@ describe('Folder Operations Integration Tests', function() {
 
       if (contents.folders.length > 0) {
         const folder = contents.folders[0];
-        
+
         expect(folder).to.have.property('id');
         expect(folder).to.have.property('name');
         expect(folder).to.have.property('createdAt');
         expect(folder).to.have.property('updatedAt');
-        
+
         expect(folder.id).to.be.a('string');
         expect(folder.name).to.be.a('string');
       }
@@ -81,11 +100,11 @@ describe('Folder Operations Integration Tests', function() {
   });
 
   describe('createFolder', () => {
-    it('should create folder in root', async () => {
+    it('should create folder in Test directory', async () => {
       const folderName = `${testConfig.folderName}-${Date.now()}`;
-      const folder = await sdk.createFolder(folderName);
+      const folder = await sdk.createFolder(folderName, testFolderId!);
 
-      createdFolder = folder;
+      createdFolderIds.push(folder.id);
 
       expect(folder).to.have.property('id');
       expect(folder).to.have.property('name');
@@ -93,14 +112,16 @@ describe('Folder Operations Integration Tests', function() {
       expect(folder.id).to.be.a('string');
     });
 
-    it('should create folder in specific parent', async () => {
-      // First create parent folder
+    it('should create nested folder in Test directory', async () => {
+      // First create parent folder in Test
       const parentName = `parent-${Date.now()}`;
-      const parentFolder = await sdk.createFolder(parentName);
+      const parentFolder = await sdk.createFolder(parentName, testFolderId!);
+      createdFolderIds.push(parentFolder.id);
 
       // Then create child folder
       const childName = `child-${Date.now()}`;
       const childFolder = await sdk.createFolder(childName, parentFolder.id);
+      createdFolderIds.push(childFolder.id);
 
       expect(childFolder).to.have.property('id');
       expect(childFolder).to.have.property('name');
@@ -109,9 +130,9 @@ describe('Folder Operations Integration Tests', function() {
       expect(childFolder.parentId).to.equal(parentFolder.id);
     });
 
-    it('should fail to create folder with empty name', async function() {
+    it('should fail to create folder with empty name', async function () {
       try {
-        await sdk.createFolder('');
+        await sdk.createFolder('', testFolderId!);
         expect.fail('Should have thrown an error');
       } catch (error: any) {
         expect(error).to.exist;
@@ -120,12 +141,13 @@ describe('Folder Operations Integration Tests', function() {
   });
 
   describe('renameFolder', () => {
-    it('should rename folder successfully', async function() {
+    it('should rename folder successfully', async function () {
       this.timeout(TEST_TIMEOUT);
 
-      // Create folder to rename
+      // Create folder to rename in Test directory
       const originalName = `rename-test-${Date.now()}`;
-      const folder = await sdk.createFolder(originalName);
+      const folder = await sdk.createFolder(originalName, testFolderId!);
+      createdFolderIds.push(folder.id);
 
       // Rename it
       const newName = `renamed-${Date.now()}`;
@@ -133,8 +155,8 @@ describe('Folder Operations Integration Tests', function() {
 
       expect(result).to.have.property('success', true);
 
-      // Verify rename by listing folder contents
-      const contents = await sdk.list();
+      // Verify rename by listing Test folder contents
+      const contents = await sdk.list(testFolderId!);
       const renamedFolder = contents.folders.find(f => f.id === folder.id);
 
       expect(renamedFolder).to.exist;
@@ -143,12 +165,15 @@ describe('Folder Operations Integration Tests', function() {
   });
 
   describe('moveFolder', () => {
-    it('should move folder to another parent', async function() {
+    it('should move folder within Test directory', async function () {
       this.timeout(TEST_TIMEOUT);
 
-      // Create source and destination folders
-      const folderToMove = await sdk.createFolder(`move-source-${Date.now()}`);
-      const destinationFolder = await sdk.createFolder(`move-dest-${Date.now()}`);
+      // Create source and destination folders in Test
+      const folderToMove = await sdk.createFolder(`move-source-${Date.now()}`, testFolderId!);
+      createdFolderIds.push(folderToMove.id);
+
+      const destinationFolder = await sdk.createFolder(`move-dest-${Date.now()}`, testFolderId!);
+      createdFolderIds.push(destinationFolder.id);
 
       // Move folder
       const result = await sdk.moveFolder(folderToMove.id, destinationFolder.id);

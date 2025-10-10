@@ -1,6 +1,6 @@
-import { createHash, pbkdf2Sync, randomBytes, createCipheriv, createDecipheriv } from 'crypto';
-import * as openpgp from 'openpgp';
 import { aes } from '@internxt/lib';
+import { createCipheriv, createDecipheriv, createHash, pbkdf2Sync, randomBytes } from 'crypto';
+import * as openpgp from 'openpgp';
 import { CryptoProvider, GeneratedKeys, HashObject, KeyAndIv } from '../types';
 
 export class CryptoUtils {
@@ -78,12 +78,12 @@ export class CryptoUtils {
     const password = Buffer.concat([Buffer.from(secret, 'binary'), salt]);
     const md5Hashes: Buffer[] = [];
     let digest = password;
-    
+
     for (let i = 0; i < TRANSFORM_ROUNDS; i++) {
       md5Hashes[i] = createHash('md5').update(digest).digest();
       digest = Buffer.concat([md5Hashes[i], password]);
     }
-    
+
     const key = Buffer.concat([md5Hashes[0], md5Hashes[1]]);
     const iv = md5Hashes[2];
     return { key, iv };
@@ -97,15 +97,18 @@ export class CryptoUtils {
       userIDs: [{ email: 'inxt@inxt.com' }],
       curve: 'ed25519Legacy',
     });
-    
-    const aesInit = { 
-      iv: this.appCryptoSecret,
-      salt: this.appCryptoSecret
+
+    // Convert appCryptoSecret to hex for AES encryption
+    const hexIv = Buffer.from(this.appCryptoSecret).toString('hex');
+    const hexSalt = Buffer.from(this.appCryptoSecret).toString('hex');
+    const aesInit = {
+      iv: hexIv,
+      salt: hexSalt
     };
     const privateKeyEncrypted = aes.encrypt(privateKey, password, aesInit);
     const publicKeyBase64 = Buffer.from(publicKey).toString('base64');
     const revocationCertificateBase64 = Buffer.from(revocationCertificate).toString('base64');
-    
+
     return {
       privateKeyEncrypted,
       publicKey: publicKeyBase64,

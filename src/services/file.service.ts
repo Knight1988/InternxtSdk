@@ -1,29 +1,28 @@
-import { Drive, Network } from '@internxt/sdk';
 import { Environment } from '@internxt/inxt-js';
+import { Drive, Network } from '@internxt/sdk';
 import * as fs from 'fs';
 import * as path from 'path';
-import { NetworkFacade } from './network-facade.service';
-import { DownloadService } from './download.service';
-import { CryptoUtils } from '../utils/crypto';
-import { 
-  SDKConfig, 
-  Credentials, 
-  FileMetadata, 
-  UploadedFile, 
+import {
+  Credentials,
   DownloadedFile,
+  FileMetadata,
+  InternalConfig,
   OperationResult,
   ProgressCallback,
-  AppDetails,
+  UploadedFile,
   WritableStream
 } from '../types';
+import { CryptoUtils } from '../utils/crypto';
+import { DownloadService } from './download.service';
+import { NetworkFacade } from './network-facade.service';
 
 export class FileService {
-  private config: Required<SDKConfig> & { appDetails: AppDetails };
+  private config: InternalConfig;
   private credentials: Credentials;
   private storageClient: any;
   private cryptoUtils: CryptoUtils;
 
-  constructor(config: Required<SDKConfig> & { appDetails: AppDetails }, credentials: Credentials) {
+  constructor(config: InternalConfig, credentials: Credentials) {
     this.config = config;
     this.credentials = credentials;
     this.storageClient = Drive.Storage.client(
@@ -70,12 +69,12 @@ export class FileService {
    * Upload a file
    */
   async uploadFile(
-    filePath: string, 
-    destinationFolderId: string | null = null, 
+    filePath: string,
+    destinationFolderId: string | null = null,
     onProgress: ProgressCallback | null = null
   ): Promise<UploadedFile> {
     const stats = await fs.promises.stat(filePath);
-    
+
     if (!stats.size) {
       throw new Error('Cannot upload empty file');
     }
@@ -135,8 +134,8 @@ export class FileService {
    * Download a file
    */
   async downloadFile(
-    fileId: string, 
-    destinationPath: string, 
+    fileId: string,
+    destinationPath: string,
     onProgress: ProgressCallback | null = null
   ): Promise<DownloadedFile> {
     // Get file metadata
@@ -204,7 +203,7 @@ export class FileService {
   async getFileMetadata(fileId: string): Promise<FileMetadata> {
     const [getFilePromise] = this.storageClient.getFile(fileId);
     const fileMetadata = await getFilePromise;
-    
+
     return {
       id: fileMetadata.uuid,
       name: fileMetadata.name,
@@ -247,7 +246,7 @@ export class FileService {
     await this.storageClient.updateFileMetaByUUID(fileId, {
       plainName: newName,
     });
-    
+
     return { success: true, id: fileId, name: newName };
   }
 
@@ -258,7 +257,7 @@ export class FileService {
     await this.storageClient.moveFileByUuid(fileId, {
       destinationFolderUuid: destinationFolderId,
     });
-    
+
     return { success: true, id: fileId, newFolderId: destinationFolderId };
   }
 }

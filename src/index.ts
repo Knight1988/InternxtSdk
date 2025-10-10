@@ -2,24 +2,24 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 import { AuthService } from './services/auth.service';
-import { FolderService } from './services/folder.service';
 import { FileService } from './services/file.service';
-import { 
-  SDKConfig, 
-  Credentials, 
-  LoginResult, 
-  FolderContents,
-  Folder,
-  FileMetadata,
-  UploadedFile,
+import { FolderService } from './services/folder.service';
+import {
+  Credentials,
   DownloadedFile,
+  FileMetadata,
+  Folder,
+  FolderContents,
+  InternalConfig,
+  LoginResult,
   OperationResult,
   ProgressCallback,
-  AppDetails
+  SDKConfig,
+  UploadedFile
 } from './types';
 
 export class InternxtSDK {
-  private config: Required<SDKConfig> & { appDetails: AppDetails };
+  private config: InternalConfig;
   private authService: AuthService;
   private credentials: Credentials | null = null;
 
@@ -30,9 +30,11 @@ export class InternxtSDK {
       appCryptoSecret: options.appCryptoSecret || process.env.APP_CRYPTO_SECRET || '6KYQBP847D4ATSFA',
       clientName: options.clientName || 'internxt-sdk',
       clientVersion: options.clientVersion || '1.0.0',
+      desktopHeader: options.desktopHeader || process.env.DESKTOP_HEADER,
       appDetails: {
         clientName: options.clientName || 'internxt-sdk',
         clientVersion: options.clientVersion || '1.0.0',
+        desktopHeader: options.desktopHeader || process.env.DESKTOP_HEADER,
       },
     };
 
@@ -92,7 +94,7 @@ export class InternxtSDK {
     if (!this.credentials) {
       this.credentials = await this.authService.getCredentials();
     }
-    
+
     if (!this.credentials) {
       throw new Error('Not authenticated. Please login first.');
     }
@@ -123,8 +125,8 @@ export class InternxtSDK {
    * @param onProgress - Progress callback function(progress)
    */
   async uploadFile(
-    filePath: string, 
-    destinationFolderId: string | null = null, 
+    filePath: string,
+    destinationFolderId: string | null = null,
     onProgress: ProgressCallback | null = null
   ): Promise<UploadedFile> {
     await this.ensureAuthenticated();
@@ -139,8 +141,8 @@ export class InternxtSDK {
    * @param onProgress - Progress callback function(progress)
    */
   async downloadFile(
-    fileId: string, 
-    destinationPath: string, 
+    fileId: string,
+    destinationPath: string,
     onProgress: ProgressCallback | null = null
   ): Promise<DownloadedFile> {
     await this.ensureAuthenticated();

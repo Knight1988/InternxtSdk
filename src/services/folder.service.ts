@@ -1,17 +1,15 @@
 import { Drive } from '@internxt/sdk';
-import { SDKConfig, Credentials, Folder, File, FolderContents, AppDetails, OperationResult } from '../types';
+import { Credentials, File, Folder, FolderContents, InternalConfig, OperationResult } from '../types';
 
 export class FolderService {
   private credentials: Credentials;
   private storageClient: any;
 
-  constructor(config: Required<SDKConfig> & { appDetails: AppDetails }, credentials: Credentials) {
+  constructor(config: InternalConfig, credentials: Credentials) {
     this.credentials = credentials;
-    this.storageClient = Drive.Storage.client(
-      config.apiUrl,
-      config.appDetails,
-      { token: credentials.token }
-    );
+    this.storageClient = Drive.Storage.client(config.apiUrl, config.appDetails, {
+      token: credentials.token,
+    });
   }
 
   /**
@@ -19,10 +17,10 @@ export class FolderService {
    */
   async list(folderId: string | null = null): Promise<FolderContents> {
     const folderUuid = folderId || this.credentials.user.rootFolderId;
-    
+
     const folders = await this.getAllSubfolders(folderUuid, 0);
     const files = await this.getAllSubfiles(folderUuid, 0);
-    
+
     return {
       folders: folders.map((f: any): Folder => ({
         id: f.uuid,
@@ -55,7 +53,7 @@ export class FolderService {
       'ASC'
     );
     const { folders } = await folderContentPromise;
-    
+
     if (folders.length > 0) {
       const more = await this.getAllSubfolders(
         folderUuid,
@@ -78,7 +76,7 @@ export class FolderService {
       'ASC'
     );
     const { files } = await folderContentPromise;
-    
+
     if (files.length > 0) {
       const more = await this.getAllSubfiles(folderUuid, offset + files.length);
       return files.concat(more);
@@ -91,14 +89,14 @@ export class FolderService {
    */
   async createFolder(folderName: string, parentFolderId: string | null = null): Promise<Folder> {
     const parentUuid = parentFolderId || this.credentials.user.rootFolderId;
-    
+
     const [createPromise] = this.storageClient.createFolderByUuid({
       plainName: folderName,
       parentFolderUuid: parentUuid,
     });
-    
+
     const newFolder = await createPromise;
-    
+
     return {
       id: newFolder.uuid,
       name: newFolder.plainName,
@@ -127,10 +125,10 @@ export class FolderService {
    */
   async renameFolder(folderId: string, newName: string): Promise<OperationResult> {
     await this.storageClient.updateFolderNameWithUUID({
-      uuid: folderId,
-      plainName: newName,
+      folderUuid: folderId,
+      name: newName,
     });
-    
+
     return { success: true, id: folderId, name: newName };
   }
 
@@ -139,9 +137,9 @@ export class FolderService {
    */
   async moveFolder(folderId: string, destinationFolderId: string): Promise<OperationResult> {
     await this.storageClient.moveFolderByUuid(folderId, {
-      destinationFolderUuid: destinationFolderId,
+      destinationFolder: destinationFolderId,
     });
-    
+
     return { success: true, id: folderId, newParentId: destinationFolderId };
   }
 }
