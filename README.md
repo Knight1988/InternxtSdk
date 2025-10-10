@@ -386,6 +386,57 @@ A: The SDK prevents overwriting existing files during download. Delete or rename
 - `openpgp` - PGP encryption
 - `dotenv` - Environment configuration
 
+## Publishing to NPM
+
+### Prerequisites
+1. Set up NPM token in GitHub Secrets as `NPM_TOKEN`
+2. Ensure version in `package.json` is updated
+3. Create a GitHub release
+
+### Automatic Publishing
+The package is automatically published to NPM when you create a GitHub release:
+
+```bash
+# Update version in package.json first
+npm version patch  # or minor, or major
+
+# Commit and push
+git add package.json
+git commit -m "chore: bump version to x.x.x"
+git push origin main
+
+# Create a GitHub release (via GitHub UI or CLI)
+gh release create v0.1.0 --title "Release v0.1.0" --notes "Release notes here"
+```
+
+The GitHub Action will:
+1. Run tests on Node.js 18.x and 20.x
+2. Build the package
+3. Publish to NPM with provenance
+
+### Manual Publishing
+You can also trigger the workflow manually from the GitHub Actions tab, or publish directly:
+
+```bash
+npm run build
+npm publish
+```
+
+## Continuous Integration
+
+The project includes two GitHub Actions workflows:
+
+### CI Workflow (`ci.yml`)
+- Runs on push/PR to main and develop branches
+- Tests on Node.js 18.x, 20.x, and 22.x
+- Runs build and unit tests
+- Performs TypeScript type checking
+
+### NPM Publish Workflow (`npm-publish.yml`)
+- Triggers on release creation or manual dispatch
+- Runs full test suite
+- Publishes to NPM registry
+
 ## License
 
 MIT
@@ -401,3 +452,4 @@ Built with code patterns from:
 - [Internxt Website](https://internxt.com)
 - [Internxt GitHub](https://github.com/internxt)
 - [Internxt CLI Repository](https://github.com/internxt/cli)
+
