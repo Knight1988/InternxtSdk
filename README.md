@@ -394,7 +394,7 @@ A: The SDK prevents overwriting existing files during download. Delete or rename
 1. **NPM_TOKEN**: Set up NPM token in GitHub Secrets
    - Go to npmjs.com → Account → Access Tokens
    - Generate "Classic Token" with "Automation" type
-   - Add to GitHub: Repo Settings → Secrets → Actions → `NPM_TOKEN`
+   - Add to GitHub: Repo Settings → Environments → Prd environment → `NPM_TOKEN`
 
 #### Optional for Integration Tests in CI:
 2. **INTERNXT_TEST_EMAIL**: Test account email
@@ -402,7 +402,7 @@ A: The SDK prevents overwriting existing files during download. Delete or rename
 4. **INTERNXT_TEST_2FA_SECRET**: TOTP secret key (not the 6-digit code)
 5. **DESKTOP_HEADER**: Token for privileged operations (has default value)
 
-See [GITHUB_ACTIONS_SETUP.md](./GITHUB_ACTIONS_SETUP.md) for detailed setup instructions.
+See [GITHUB_ENVIRONMENTS_SETUP.md](./GITHUB_ENVIRONMENTS_SETUP.md) for detailed setup instructions.
 
 ### Automatic Publishing
 The package is automatically published to NPM when you create a GitHub release:

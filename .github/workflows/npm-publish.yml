@@ -45,6 +45,9 @@ jobs:
   publish-npm:
     needs: build-and-test
     runs-on: ubuntu-latest
+    environment:
+      name: Prd
+      url: https://www.npmjs.com/package/@knight1988/internxt-sdk
     permissions:
       contents: read
       id-token: write
