@@ -1,5 +1,5 @@
 require('dotenv').config();
-const InternxtSDK = require('../src/index');
+const InternxtSDK = require('../dist/index').default;
 const readline = require('readline');
 
 /**

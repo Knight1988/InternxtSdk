@@ -1,5 +1,5 @@
 require('dotenv').config();
-const InternxtSDK = require('../src/index');
+const InternxtSDK = require('../dist/index').default;
 
 /**
  * Example: Upload a file to Internxt Drive

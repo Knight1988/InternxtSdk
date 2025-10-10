@@ -2,6 +2,8 @@
 
 A comprehensive Node.js SDK wrapper for Internxt Drive that provides easy-to-use methods for authentication, file operations, and folder management. Built on top of `@internxt/sdk` and `@internxt/cli`.
 
+**Now with full TypeScript support!** 🎉
+
 ## Features
 
 ✅ **Authentication**
@@ -34,12 +36,14 @@ A comprehensive Node.js SDK wrapper for Internxt Drive that provides easy-to-use
 
 ```bash
 npm install
+npm run build  # Compile TypeScript
 ```
 
 ## Quick Start
 
+### JavaScript
 ```javascript
-const InternxtSDK = require('./src/index');
+const InternxtSDK = require('./dist/index').default;
 
 async function main() {
   const sdk = new InternxtSDK();
@@ -73,6 +77,26 @@ async function main() {
 
 main();
 ```
+
+### TypeScript
+```typescript
+import InternxtSDK from './dist/index';
+import { LoginResult, FolderContents } from './dist/types';
+
+async function main() {
+  const sdk = new InternxtSDK({
+    clientName: 'my-app',
+    clientVersion: '1.0.0'
+  });
+  
+  const result: LoginResult = await sdk.login(email, password);
+  const contents: FolderContents = await sdk.list();
+}
+
+main();
+```
+
+See [TYPESCRIPT.md](./TYPESCRIPT.md) for full TypeScript documentation.
 
 ## API Reference
 

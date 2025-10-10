@@ -11,3 +11,5 @@ test-upload.txt
 *~
 .vscode/
 .idea/
+dist/
+*.tsbuildinfo
