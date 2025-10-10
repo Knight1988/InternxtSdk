@@ -9,8 +9,7 @@ import {
   InternalConfig,
   OperationResult,
   ProgressCallback,
-  UploadedFile,
-  WritableStream
+  UploadedFile
 } from '../types';
 import { CryptoUtils } from '../utils/crypto';
 import { DownloadService } from './download.service';
@@ -159,13 +158,13 @@ export class FileService {
     const networkFacade = this.getNetworkFacade();
     const fileWriteStream = fs.createWriteStream(downloadPath);
 
-    // Download file
+    // Download file - pass the write stream directly
     const [executeDownload, abortable] = await networkFacade.downloadToStream(
       fileMetadata.bucket,
       this.credentials.user.mnemonic,
       fileMetadata.fileId,
       fileMetadata.size,
-      this.writeStreamToWritableStream(fileWriteStream),
+      fileWriteStream, // Pass the stream directly
       undefined,
       {
         abortController: new AbortController(),
@@ -216,30 +215,6 @@ export class FileService {
   }
 
   /**
-   * Helper to convert read stream to writable stream
-   */
-  private writeStreamToWritableStream(writeStream: fs.WriteStream): WritableStream {
-    return {
-      write: (chunk: Buffer): Promise<void> => {
-        return new Promise((resolve, reject) => {
-          const canContinue = writeStream.write(chunk);
-          if (canContinue) {
-            resolve();
-          } else {
-            writeStream.once('drain', resolve);
-            writeStream.once('error', reject);
-          }
-        });
-      },
-      close: (): Promise<void> => {
-        return new Promise((resolve) => {
-          writeStream.end(resolve);
-        });
-      },
-    };
-  }
-
-  /**
    * Rename file
    */
   async renameFile(fileId: string, newName: string): Promise<OperationResult> {
@@ -255,7 +230,7 @@ export class FileService {
    */
   async moveFile(fileId: string, destinationFolderId: string): Promise<OperationResult> {
     await this.storageClient.moveFileByUuid(fileId, {
-      destinationFolderUuid: destinationFolderId,
+      destinationFolder: destinationFolderId,
     });
 
     return { success: true, id: fileId, newFolderId: destinationFolderId };
