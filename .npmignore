@@ -1,0 +1,37 @@
+# Source files
+src/
+test/
+*.ts
+!*.d.ts
+
+# Config files
+.env*
+!.env.example
+tsconfig.json
+.mocharc.json
+.vscode/
+.github/
+
+# Documentation
+*.md
+!README.md
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.idea/
+*.swp
+*.swo
+
+# Logs
+logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test fixtures
+test/

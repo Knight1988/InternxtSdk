@@ -1,9 +1,22 @@
 {
-  "name": "@internxt/sdk-wrapper",
-  "version": "1.0.0",
+  "name": "@knight1988/internxt-sdk",
+  "version": "0.1.0",
   "description": "Complete Internxt SDK wrapper with login, file operations, and folder management",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Knight1988/InternxtSdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Knight1988/InternxtSdk/issues"
+  },
+  "homepage": "https://github.com/Knight1988/InternxtSdk#readme",
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc --watch",
@@ -13,7 +26,7 @@
     "demo": "npm run build && node example.js",
     "dev": "ts-node src/index.ts",
     "test": "mocha",
-    "test:unit": "mocha 'test/unit/**/*.test.ts'",
+    "test:unit": "mocha --config .mocharc.unit.json",
     "test:integration": "mocha 'test/integration/**/*.test.ts'",
     "test:watch": "mocha --watch",
     "test:coverage": "echo 'Coverage not configured yet. Install nyc or c8 for coverage.'"
