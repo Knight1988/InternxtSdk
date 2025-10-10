@@ -33,7 +33,7 @@ jobs:
           CI: true
       
       - name: Run integration tests (if secrets available)
-        if: ${{ github.event_name == 'workflow_dispatch' && secrets.INTERNXT_TEST_EMAIL != '' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && secrets.INTERNXT_TEST_EMAIL }}
         run: npm run test:integration
         env:
           CI: true
