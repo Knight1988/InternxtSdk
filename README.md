@@ -389,9 +389,20 @@ A: The SDK prevents overwriting existing files during download. Delete or rename
 ## Publishing to NPM
 
 ### Prerequisites
-1. Set up NPM token in GitHub Secrets as `NPM_TOKEN`
-2. Ensure version in `package.json` is updated
-3. Create a GitHub release
+
+#### Required for Publishing:
+1. **NPM_TOKEN**: Set up NPM token in GitHub Secrets
+   - Go to npmjs.com → Account → Access Tokens
+   - Generate "Classic Token" with "Automation" type
+   - Add to GitHub: Repo Settings → Secrets → Actions → `NPM_TOKEN`
+
+#### Optional for Integration Tests in CI:
+2. **INTERNXT_TEST_EMAIL**: Test account email
+3. **INTERNXT_TEST_PASSWORD**: Test account password
+4. **INTERNXT_TEST_2FA_SECRET**: TOTP secret key (not the 6-digit code)
+5. **DESKTOP_HEADER**: Token for privileged operations (has default value)
+
+See [GITHUB_ACTIONS_SETUP.md](./GITHUB_ACTIONS_SETUP.md) for detailed setup instructions.
 
 ### Automatic Publishing
 The package is automatically published to NPM when you create a GitHub release:
@@ -401,9 +412,10 @@ The package is automatically published to NPM when you create a GitHub release:
 npm version patch  # or minor, or major
 
 # Commit and push
-git add package.json
+git add package.json package-lock.json
 git commit -m "chore: bump version to x.x.x"
 git push origin main
+git push --tags
 
 # Create a GitHub release (via GitHub UI or CLI)
 gh release create v0.1.0 --title "Release v0.1.0" --notes "Release notes here"

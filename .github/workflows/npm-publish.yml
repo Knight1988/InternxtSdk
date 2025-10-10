@@ -27,10 +27,20 @@ jobs:
       - name: Build
         run: npm run build
       
-      - name: Run unit tests only
+      - name: Run unit tests
         run: npm run test:unit
         env:
           CI: true
+      
+      - name: Run integration tests (if secrets available)
+        if: ${{ github.event_name == 'workflow_dispatch' && secrets.INTERNXT_TEST_EMAIL != '' }}
+        run: npm run test:integration
+        env:
+          CI: true
+          INTERNXT_TEST_EMAIL: ${{ secrets.INTERNXT_TEST_EMAIL }}
+          INTERNXT_TEST_PASSWORD: ${{ secrets.INTERNXT_TEST_PASSWORD }}
+          INTERNXT_TEST_2FA_SECRET: ${{ secrets.INTERNXT_TEST_2FA_SECRET }}
+          DESKTOP_HEADER: ${{ secrets.DESKTOP_HEADER || '3b68706a367fd567b929396290b1de40768bb768' }}
 
   publish-npm:
     needs: build-and-test
