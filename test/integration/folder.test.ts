@@ -114,6 +114,9 @@ describe('Folder Operations Integration Tests', function () {
       const parentFolder = await sdk.createFolder(parentName, testFolderId!);
       createdFolderIds.push(parentFolder.id);
 
+      // Small delay to ensure parent folder is fully registered in API
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
       // Then create child folder
       const childName = `child-${Date.now()}`;
       const childFolder = await sdk.createFolder(childName, parentFolder.id);
@@ -161,9 +164,7 @@ describe('Folder Operations Integration Tests', function () {
   });
 
   describe('moveFolder', () => {
-    it.skip('should move folder within Test directory', async function () {
-      // NOTE: Temporarily skipping - API returns "Not Found" error
-      // This might be a timing issue or API limitation
+    it('should move folder within Test directory', async function () {
       this.timeout(TEST_TIMEOUT);
 
       // Create source and destination folders in Test
@@ -193,8 +194,11 @@ describe('Folder Operations Integration Tests', function () {
     it('should delete folder successfully', async () => {
       // Create a folder to delete
       const folderToDelete = await sdk.createFolder(`delete-test-${Date.now()}`, testFolderId!);
-      
+
       // Don't add to createdFolderIds since we're testing delete
+      // Small delay to ensure folder is fully registered in API
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
       // Verify folder exists
       const beforeDelete = await sdk.list(testFolderId!);
       const folderBeforeDelete = beforeDelete.folders.find(f => f.id === folderToDelete.id);
@@ -204,6 +208,9 @@ describe('Folder Operations Integration Tests', function () {
       const result = await sdk.deleteFolder(folderToDelete.id);
       expect(result).to.have.property('success', true);
       expect(result.id).to.equal(folderToDelete.id);
+
+      // Small delay to ensure deletion is propagated in API
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       // Verify folder is deleted
       const afterDelete = await sdk.list(testFolderId!);

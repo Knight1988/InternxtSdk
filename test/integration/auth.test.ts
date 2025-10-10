@@ -33,12 +33,6 @@ describe('Authentication Integration Tests', function () {
       const needs2FA = await sdk.is2FANeeded(credentials.email);
       expect(needs2FA).to.be.a('boolean');
     });
-
-    it.skip('should return false for non-existent email', async () => {
-      // NOTE: Skipping - API returns error instead of false for non-existent email
-      const needs2FA = await sdk.is2FANeeded('nonexistent-' + Date.now() + '@example.com');
-      expect(needs2FA).to.be.false;
-    });
   });
 
   describe('login', () => {
@@ -152,34 +146,6 @@ describe('Authentication Integration Tests', function () {
 
       expect(result).to.have.property('success', true);
       expect(await sdk.isLoggedIn()).to.be.false;
-    });
-  });
-
-  describe('Credentials Persistence', () => {
-    it.skip('should persist credentials across SDK instances', async function () {
-      // NOTE: Skipping - SDK design uses instance-specific credentials (not persisted)
-      // This is actually the correct behavior for security reasons
-      this.timeout(60000);
-
-      // Login with first SDK instance
-      const sdk1 = new InternxtSDK();
-
-      await sdk1.login(
-        credentials.email,
-        credentials.password,
-        credentials.twoFactorCode
-      );
-
-      expect(await sdk1.isLoggedIn()).to.be.true;
-
-      // Create new SDK instance
-      const sdk2 = new InternxtSDK();
-
-      // New instance should not be automatically logged in
-      // (credentials are instance-specific)
-      expect(await sdk2.isLoggedIn()).to.be.false;
-
-      await sdk1.logout();
     });
   });
 });

@@ -251,6 +251,9 @@ describe('File Operations Integration Tests', function () {
       // Clean up local test file
       fs.unlinkSync(uniqueFilePath);
 
+      // Small delay to ensure file is fully registered in API
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
       // Get metadata
       const metadata = await sdk.getFileMetadata(uploadedFile.id);
 
@@ -282,6 +285,9 @@ describe('File Operations Integration Tests', function () {
 
       // Clean up local upload file
       fs.unlinkSync(uniqueFilePath);
+
+      // Small delay to ensure file is fully registered in API
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       // Download it to a different location
       const downloadDir = path.dirname(testFilePath);
@@ -356,13 +362,18 @@ describe('File Operations Integration Tests', function () {
       // Clean up local test file
       fs.unlinkSync(uniqueFilePath);
 
+      // Small delay to ensure file is fully registered in API
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
       // Rename it
       const newName = `renamed-file-${Date.now()}.txt`;
       const result = await sdk.renameFile(uploadedFile.id, newName);
 
       expect(result).to.have.property('success', true);
+      expect(result.name).to.equal(newName);
 
-      // Verify rename by checking metadata
+      // Verify rename by checking metadata (with small delay for API sync)
+      await new Promise(resolve => setTimeout(resolve, 1000));
       const metadata = await sdk.getFileMetadata(uploadedFile.id);
       expect(metadata.name).to.include('renamed-file');
     });
@@ -417,7 +428,7 @@ describe('File Operations Integration Tests', function () {
 
       // Upload a file to Test folder
       const uploadedFile = await sdk.uploadFile(uniqueFilePath, testFolderId!);
-      
+
       // Don't add to uploadedFileIds since we're testing delete
       // Clean up local test file
       fs.unlinkSync(uniqueFilePath);
