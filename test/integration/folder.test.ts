@@ -188,5 +188,37 @@ describe('Folder Operations Integration Tests', function () {
       }
     });
   });
+
+  describe('deleteFolder', () => {
+    it('should delete folder successfully', async () => {
+      // Create a folder to delete
+      const folderToDelete = await sdk.createFolder(`delete-test-${Date.now()}`, testFolderId!);
+      
+      // Don't add to createdFolderIds since we're testing delete
+      // Verify folder exists
+      const beforeDelete = await sdk.list(testFolderId!);
+      const folderBeforeDelete = beforeDelete.folders.find(f => f.id === folderToDelete.id);
+      expect(folderBeforeDelete).to.exist;
+
+      // Delete the folder
+      const result = await sdk.deleteFolder(folderToDelete.id);
+      expect(result).to.have.property('success', true);
+      expect(result.id).to.equal(folderToDelete.id);
+
+      // Verify folder is deleted
+      const afterDelete = await sdk.list(testFolderId!);
+      const folderAfterDelete = afterDelete.folders.find(f => f.id === folderToDelete.id);
+      expect(folderAfterDelete).to.be.undefined;
+    });
+
+    it('should handle deleting non-existent folder', async () => {
+      try {
+        await sdk.deleteFolder('00000000-0000-0000-0000-000000000000');
+        expect.fail('Should have thrown an error');
+      } catch (error: any) {
+        expect(error).to.exist;
+      }
+    });
+  });
 });
 

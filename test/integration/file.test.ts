@@ -91,16 +91,16 @@ describe('File Operations Integration Tests', function () {
     // Cleanup local test fixtures
     console.log('🧹 Cleaning up local test fixtures...');
     const fixturesDir = path.join(process.cwd(), 'test/fixtures');
-    
+
     try {
       const files = await fs.promises.readdir(fixturesDir);
       for (const file of files) {
         // Skip the main test-file.txt
         if (file === 'test-file.txt') continue;
-        
+
         const filePath = path.join(fixturesDir, file);
         const stats = await fs.promises.stat(filePath);
-        
+
         if (stats.isFile()) {
           await fs.promises.unlink(filePath);
           console.log(`  ✓ Deleted local file ${file}`);
@@ -403,4 +403,49 @@ describe('File Operations Integration Tests', function () {
       expect(movedFile?.id).to.equal(uploadedFile.id);
     });
   });
+
+  describe('deleteFile', () => {
+    it('should delete file successfully', async function () {
+      this.timeout(60000);
+
+      // Create unique test file
+      const uniqueFilePath = path.join(
+        path.dirname(testFilePath),
+        `delete-test-${Date.now()}.txt`
+      );
+      fs.writeFileSync(uniqueFilePath, `Delete test file\nCreated at: ${new Date().toISOString()}\n`);
+
+      // Upload a file to Test folder
+      const uploadedFile = await sdk.uploadFile(uniqueFilePath, testFolderId!);
+      
+      // Don't add to uploadedFileIds since we're testing delete
+      // Clean up local test file
+      fs.unlinkSync(uniqueFilePath);
+
+      // Verify file exists
+      const beforeDelete = await sdk.list(testFolderId!);
+      const fileBeforeDelete = beforeDelete.files.find(f => f.id === uploadedFile.id);
+      expect(fileBeforeDelete).to.exist;
+
+      // Delete the file
+      const result = await sdk.deleteFile(uploadedFile.id);
+      expect(result).to.have.property('success', true);
+      expect(result.id).to.equal(uploadedFile.id);
+
+      // Verify file is deleted
+      const afterDelete = await sdk.list(testFolderId!);
+      const fileAfterDelete = afterDelete.files.find(f => f.id === uploadedFile.id);
+      expect(fileAfterDelete).to.be.undefined;
+    });
+
+    it('should handle deleting non-existent file', async function () {
+      try {
+        await sdk.deleteFile('00000000-0000-0000-0000-000000000000');
+        expect.fail('Should have thrown an error');
+      } catch (error: any) {
+        expect(error).to.exist;
+      }
+    });
+  });
 });
+
