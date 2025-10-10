@@ -203,9 +203,28 @@ export class InternxtSDK {
     const folderService = new FolderService(this.config, this.credentials!);
     return folderService.moveFolder(folderId, destinationFolderId);
   }
+
+  /**
+   * Delete a file
+   */
+  async deleteFile(fileId: string): Promise<OperationResult> {
+    await this.ensureAuthenticated();
+    const fileService = new FileService(this.config, this.credentials!);
+    return fileService.deleteFile(fileId);
+  }
+
+  /**
+   * Delete a folder
+   */
+  async deleteFolder(folderId: string): Promise<OperationResult> {
+    await this.ensureAuthenticated();
+    const folderService = new FolderService(this.config, this.credentials!);
+    return folderService.deleteFolder(folderId);
+  }
 }
 
 export default InternxtSDK;
 
 // Export types
 export * from './types';
+

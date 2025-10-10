@@ -235,4 +235,14 @@ export class FileService {
 
     return { success: true, id: fileId, newFolderId: destinationFolderId };
   }
+
+  /**
+   * Delete file
+   */
+  async deleteFile(fileId: string): Promise<OperationResult> {
+    await this.storageClient.deleteFileByUuid(fileId);
+
+    return { success: true, id: fileId };
+  }
 }
+

@@ -60,38 +60,54 @@ describe('File Operations Integration Tests', function () {
   });
 
   after(async () => {
-    // Cleanup uploaded files
+    // Cleanup uploaded files from cloud
     if (uploadedFileIds.length > 0) {
-      console.log('\n🧹 Cleaning up test files...');
+      console.log('\n🧹 Cleaning up test files from cloud...');
 
       for (const fileId of uploadedFileIds) {
         try {
-          const driveFile = (sdk as any).driveFile;
-          if (driveFile && typeof driveFile.deleteFile === 'function') {
-            await driveFile.deleteFile(fileId);
-            console.log(`  ✓ Deleted file ${fileId}`);
-          }
+          await sdk.deleteFile(fileId);
+          console.log(`  ✓ Deleted file ${fileId}`);
         } catch (error: any) {
           console.warn(`  ⚠️  Failed to delete file ${fileId}: ${error.message}`);
         }
       }
     }
 
-    // Cleanup created folders
+    // Cleanup created folders from cloud
     if (createdFolderIds.length > 0) {
-      console.log('🧹 Cleaning up test folders...');
+      console.log('🧹 Cleaning up test folders from cloud...');
 
       for (const folderId of createdFolderIds.reverse()) {
         try {
-          const driveFolder = (sdk as any).driveFolder;
-          if (driveFolder && typeof driveFolder.deleteFolder === 'function') {
-            await driveFolder.deleteFolder(folderId);
-            console.log(`  ✓ Deleted folder ${folderId}`);
-          }
+          await sdk.deleteFolder(folderId);
+          console.log(`  ✓ Deleted folder ${folderId}`);
         } catch (error: any) {
           console.warn(`  ⚠️  Failed to delete folder ${folderId}: ${error.message}`);
         }
       }
+    }
+
+    // Cleanup local test fixtures
+    console.log('🧹 Cleaning up local test fixtures...');
+    const fixturesDir = path.join(process.cwd(), 'test/fixtures');
+    
+    try {
+      const files = await fs.promises.readdir(fixturesDir);
+      for (const file of files) {
+        // Skip the main test-file.txt
+        if (file === 'test-file.txt') continue;
+        
+        const filePath = path.join(fixturesDir, file);
+        const stats = await fs.promises.stat(filePath);
+        
+        if (stats.isFile()) {
+          await fs.promises.unlink(filePath);
+          console.log(`  ✓ Deleted local file ${file}`);
+        }
+      }
+    } catch (error: any) {
+      console.warn(`  ⚠️  Failed to cleanup local fixtures: ${error.message}`);
     }
 
     const loggedIn = await sdk.isLoggedIn();

@@ -142,4 +142,14 @@ export class FolderService {
 
     return { success: true, id: folderId, newParentId: destinationFolderId };
   }
+
+  /**
+   * Delete folder
+   */
+  async deleteFolder(folderId: string): Promise<OperationResult> {
+    await this.storageClient.deleteFolderByUuid(folderId);
+
+    return { success: true, id: folderId };
+  }
 }
+
