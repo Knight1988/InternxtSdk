@@ -1,5 +1,5 @@
 {
-  "name": "@knight1988/internxt-sdk",
+  "name": "@dragon-knight/internxt-sdk",
   "version": "0.1.0",
   "description": "Complete Internxt SDK wrapper with login, file operations, and folder management",
   "main": "dist/index.js",
