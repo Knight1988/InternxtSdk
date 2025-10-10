@@ -14,7 +14,7 @@ This file contains test environment variables. Create a `.env.test.local` file f
    ```bash
    INTERNXT_TEST_EMAIL=your-test-email@example.com
    INTERNXT_TEST_PASSWORD=your-test-password
-   INTERNXT_TEST_2FA_CODE=your-2fa-code-if-needed
+   INTERNXT_TEST_2FA_SECRET=your-2fa-secret-key-if-needed
    ```
 
 3. The `.env.test.local` file is gitignored and safe for local testing
@@ -26,7 +26,9 @@ This file contains test environment variables. Create a `.env.test.local` file f
 - `INTERNXT_TEST_PASSWORD` - Your test account password
 
 ### Optional
-- `INTERNXT_TEST_2FA_CODE` - 2FA code if your account requires it
+- `INTERNXT_TEST_2FA_SECRET` - Your 2FA secret key (TOTP secret) if your account requires it
+  - This is the secret key shown when you first set up 2FA (usually a long alphanumeric string)
+  - The test suite will automatically generate time-based codes from this secret
 - `TEST_TIMEOUT` - Test timeout in milliseconds (default: 30000)
 - `TEST_FOLDER_NAME` - Name for test folders (default: test-folder-mocha)
 - `TEST_FILE_PATH` - Path to test file (default: ./test/fixtures/test-file.txt)

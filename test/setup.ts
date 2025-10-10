@@ -1,6 +1,7 @@
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 import * as chai from 'chai';
+import { authenticator } from 'otplib';
 
 // Load test environment variables
 const envPath = path.resolve(process.cwd(), '.env.test.local');
@@ -20,7 +21,7 @@ export const TEST_TIMEOUT = parseInt(process.env.TEST_TIMEOUT || '30000', 10);
 export const getTestCredentials = () => {
   const email = process.env.INTERNXT_TEST_EMAIL;
   const password = process.env.INTERNXT_TEST_PASSWORD;
-  const twoFactorCode = process.env.INTERNXT_TEST_2FA_CODE;
+  const twoFactorSecret = process.env.INTERNXT_TEST_2FA_SECRET;
 
   if (!email || !password) {
     throw new Error(
@@ -28,10 +29,21 @@ export const getTestCredentials = () => {
     );
   }
 
+  // Generate 2FA code from secret if provided
+  let twoFactorCode: string | undefined;
+  if (twoFactorSecret && twoFactorSecret.trim()) {
+    try {
+      twoFactorCode = authenticator.generate(twoFactorSecret);
+      console.log(`Generated 2FA code: ${twoFactorCode}`);
+    } catch (error) {
+      console.warn('Warning: Failed to generate 2FA code from secret:', error);
+    }
+  }
+
   return {
     email,
     password,
-    twoFactorCode: twoFactorCode || undefined,
+    twoFactorCode,
   };
 };
 
