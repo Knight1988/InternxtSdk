@@ -1,0 +1,13 @@
+node_modules/
+.env
+*.log
+.DS_Store
+.internxt-cli/
+.internxt-sdk/
+downloads/
+test-upload.txt
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
