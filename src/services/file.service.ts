@@ -124,7 +124,7 @@ export class FileService {
       id: createdFile.uuid,
       name: fileInfo.name,
       type: fileType,
-      size: createdFile.size,
+      size: typeof createdFile.size === 'string' ? parseInt(createdFile.size, 10) : createdFile.size,
       createdAt: createdFile.createdAt,
       folderId: createdFile.folderUuid,
     };

@@ -22,11 +22,11 @@ export class NetworkFacade {
     callback: (err: Error | null, res?: string) => void, 
     progressCallback?: ProgressCallback
   ): any {
-    return this.environment.upload(stream, {
-      progressCallback: progressCallback || (() => {}),
-      bucketId: bucket,
+    return this.environment.upload(bucket, {
+      source: stream,
       fileSize: size,
       finishedCallback: callback,
+      progressCallback: progressCallback || (() => {}),
     });
   }
 
@@ -46,14 +46,20 @@ export class NetworkFacade {
     const progressCallback = config?.progressCallback || (() => {});
 
     const downloadPromise = this.environment.download(
+      bucket,
       fileId,
       {
-        bucketId: bucket,
         fileSize: fileSize,
         progressCallback: (progress: number) => {
           progressCallback(progress);
         },
         writeStream: writeStream,
+      },
+      {
+        label: 'Dynamic',
+        params: {
+          chunkSize: 4096
+        }
       }
     );
 
