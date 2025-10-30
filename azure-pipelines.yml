@@ -9,17 +9,6 @@ trigger:
 pool:
   name: Default
 
-variables:
-  # Map pipeline secrets to variables used by tests. Set these as secret variables in the pipeline UI or variable group.
-  - name: INTERNXT_TEST_EMAIL
-    value: $(INTERNXT_TEST_EMAIL)
-  - name: INTERNXT_TEST_PASSWORD
-    value: $(INTERNXT_TEST_PASSWORD)
-  - name: INTERNXT_TEST_2FA_SECRET
-    value: $(INTERNXT_TEST_2FA_SECRET)
-  - name: DESKTOP_HEADER
-    value: $(DESKTOP_HEADER)
-
 steps:
 - task: NodeTool@0
   inputs:
