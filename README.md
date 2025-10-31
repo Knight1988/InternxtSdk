@@ -60,10 +60,17 @@ async function main() {
   const folder = await sdk.createFolder('My New Folder');
   console.log('Created:', folder.name);
   
-  // Upload a file
+  // Upload a file (throws if a file with the same name exists in the destination)
   const file = await sdk.uploadFile('./document.pdf', null, (progress) => {
     console.log(`Upload: ${Math.round(progress * 100)}%`);
   });
+  console.log('Uploaded:', file.name);
+
+  // Upload with force=true to overwrite any existing file with the same name
+  const fileForced = await sdk.uploadFile('./document.pdf', null, (progress) => {
+    console.log(`Upload (force): ${Math.round(progress * 100)}%`);
+  }, true);
+  console.log('Uploaded with force:', fileForced.name);
   console.log('Uploaded:', file.name);
   
   // Download a file
@@ -204,17 +211,22 @@ await sdk.moveFolder('folder-uuid', 'destination-folder-uuid');
 
 ### File Operations
 
-#### `await sdk.uploadFile(filePath, destinationFolderId, onProgress)`
-Upload a file.
+#### `await sdk.uploadFile(filePath, destinationFolderId, onProgress, force)`
+Upload a file. If a file with the same name (and extension) already exists in the destination folder, the SDK will throw an error unless `force` is set to `true`. When `force` is `true`, matching files will be deleted before the new upload proceeds.
 
 ```javascript
-// Upload to root
+// Upload to root (throws if duplicate exists)
 const file = await sdk.uploadFile('./document.pdf');
 
-// Upload to specific folder with progress
+// Upload to specific folder with progress (throws if duplicate exists)
 const file = await sdk.uploadFile('./photo.jpg', 'folder-uuid', (progress) => {
   console.log(`${Math.round(progress * 100)}%`);
 });
+
+// Upload and force overwrite if a file with the same name exists
+const fileForced = await sdk.uploadFile('./photo.jpg', 'folder-uuid', (progress) => {
+  console.log(`${Math.round(progress * 100)}%`);
+}, true);
 ```
 
 #### `await sdk.downloadFile(fileId, destinationPath, onProgress)`
@@ -375,8 +387,8 @@ A: Make sure to call `await sdk.login()` or `await sdk.getCredentials()` before 
 **Q: Upload/download progress not working**  
 A: Pass a callback function as the third parameter to track progress.
 
-**Q: File already exists error**  
-A: The SDK prevents overwriting existing files during download. Delete or rename the existing file first.
+**Q: File already exists error**
+A: When uploading, the SDK will throw an error if a file with the same name already exists in the destination folder. To overwrite, pass `true` as the fourth argument to `uploadFile` (e.g. `await sdk.uploadFile('./file.txt', null, null, true)`); the SDK will attempt to delete matching files before uploading. For downloads, if the local destination file already exists, the download will throw — delete or rename the local file first.
 
 ## Dependencies
 
