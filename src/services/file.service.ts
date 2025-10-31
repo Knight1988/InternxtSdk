@@ -70,7 +70,8 @@ export class FileService {
   async uploadFile(
     filePath: string,
     destinationFolderId: string | null = null,
-    onProgress: ProgressCallback | null = null
+    onProgress: ProgressCallback | null = null,
+    force: boolean = false
   ): Promise<UploadedFile> {
     const stats = await fs.promises.stat(filePath);
 
@@ -81,6 +82,48 @@ export class FileService {
     const fileInfo = path.parse(filePath);
     const fileType = fileInfo.ext.replace('.', '');
     const folderUuid = destinationFolderId || this.credentials.user.rootFolderId;
+
+    // Check if a file with the same name/type already exists in the destination folder
+    // If it exists and force is false -> throw an error. If force is true -> delete existing files first.
+    const matchingFiles: any[] = [];
+    let offset = 0;
+    // Paginate through folder files
+    while (true) {
+      const [folderFilesPromise] = this.storageClient.getFolderFilesByUuid(
+        folderUuid,
+        offset,
+        50,
+        'plainName',
+        'ASC'
+      );
+      const { files } = await folderFilesPromise;
+
+      for (const f of files) {
+        const fType = f.type || '';
+        if (f.plainName === fileInfo.name && fType === fileType) {
+          matchingFiles.push(f);
+        }
+      }
+
+      if (!files || files.length < 50) break;
+      offset += files.length;
+    }
+
+    if (matchingFiles.length > 0) {
+      if (!force) {
+        const ext = fileType ? `.${fileType}` : '';
+        throw new Error(`File already exists: ${fileInfo.name}${ext}`);
+      }
+
+      // Delete matching files if forcing
+      for (const mf of matchingFiles) {
+        try {
+          await this.storageClient.deleteFileByUuid(mf.uuid);
+        } catch (err) {
+          // If deletion fails, continue to attempt upload; user asked to force overwrite
+        }
+      }
+    }
 
     const networkFacade = this.getNetworkFacade();
     const readStream = fs.createReadStream(filePath);

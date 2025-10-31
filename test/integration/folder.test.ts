@@ -148,6 +148,9 @@ describe('Folder Operations Integration Tests', function () {
       const folder = await sdk.createFolder(originalName, testFolderId!);
       createdFolderIds.push(folder.id);
 
+      // Small delay to ensure folder is fully registered in API before rename
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
       // Rename it
       const newName = `renamed-${Date.now()}`;
       const result = await sdk.renameFolder(folder.id, newName);

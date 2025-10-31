@@ -127,11 +127,12 @@ export class InternxtSDK {
   async uploadFile(
     filePath: string,
     destinationFolderId: string | null = null,
-    onProgress: ProgressCallback | null = null
+    onProgress: ProgressCallback | null = null,
+    force: boolean = false
   ): Promise<UploadedFile> {
     await this.ensureAuthenticated();
     const fileService = new FileService(this.config, this.credentials!);
-    return fileService.uploadFile(filePath, destinationFolderId, onProgress);
+    return fileService.uploadFile(filePath, destinationFolderId, onProgress, force);
   }
 
   /**

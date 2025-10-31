@@ -186,6 +186,48 @@ describe('File Operations Integration Tests', function () {
       expect(uploadedFile.folderId).to.equal(folder.id);
     });
 
+    it('should throw on duplicate upload unless force is true', async function () {
+      this.timeout(60000);
+
+      // Create a duplicate-named test file
+      const baseName = `duplicate-test-${Date.now()}`;
+      const uniqueFilePath = path.join(path.dirname(testFilePath), `${baseName}.txt`);
+      fs.writeFileSync(uniqueFilePath, `Duplicate test file - first
+Created at: ${new Date().toISOString()}
+`);
+
+      // Upload first instance
+      const uploadedFile = await sdk.uploadFile(uniqueFilePath, testFolderId!);
+      uploadedFileIds.push(uploadedFile.id);
+
+      // Create another local file with the same name to attempt duplicate upload
+      fs.writeFileSync(uniqueFilePath, `Duplicate test file - second
+Created at: ${new Date().toISOString()}
+`);
+
+      // Attempt to upload without force -> should throw
+      try {
+        await sdk.uploadFile(uniqueFilePath, testFolderId!);
+        expect.fail('Should have thrown an error due to duplicate file');
+      } catch (error: any) {
+        expect(error).to.exist;
+      }
+
+      // Attempt to upload with force -> should succeed and replace previous file
+      const uploadedFile2 = await sdk.uploadFile(uniqueFilePath, testFolderId!, undefined, true);
+
+      // Replace old id in cleanup list with new one (the old should have been deleted by force)
+      const idx = uploadedFileIds.indexOf(uploadedFile.id);
+      if (idx !== -1) {
+        uploadedFileIds.splice(idx, 1, uploadedFile2.id);
+      } else {
+        uploadedFileIds.push(uploadedFile2.id);
+      }
+
+      // Clean up local test file
+      fs.unlinkSync(uniqueFilePath);
+    });
+
     it('should fail to upload non-existent file', async function () {
       try {
         await sdk.uploadFile('/nonexistent/file/path.txt', testFolderId!);

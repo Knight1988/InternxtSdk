@@ -1,6 +1,6 @@
 {
   "name": "@dragon-knight/internxt-sdk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Complete Internxt SDK wrapper with login, file operations, and folder management",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
